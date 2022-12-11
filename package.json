@@ -1,0 +1,35 @@
+{
+  "name": "express-sequelize-ts",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "author": "Jaeyong Shim <yoooong2@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node dist/app.js",
+    "build": "tsc -p ./src",
+    "dev": "nodemon -r tsconfig-paths/register ./src/index.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.26.0",
+    "sequelize-typescript": "^2.1.5",
+    "sqlite3": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.11.13",
+    "@types/validator": "^13.7.10",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "eslint": "^8.29.0",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1",
+    "typescript": "^4.9.4"
+  }
+}
