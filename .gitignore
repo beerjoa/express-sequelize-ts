@@ -306,4 +306,9 @@ fabric.properties
 .history
 .ionide
 
+### custom
+.env.*
+!.env.example
+
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,pycharm,node

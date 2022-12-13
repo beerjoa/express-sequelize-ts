@@ -1,11 +1,11 @@
-import * as dotenv from "dotenv";
-import path from "path";
+import { config } from 'dotenv';
+import { cleanEnv, port, str } from 'envalid';
 
-const CONF_PATH = path.join(__dirname, "../../.env");
+config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
-dotenv.config({ path: CONF_PATH });
+const env = cleanEnv(process.env, {
+  PORT: port({ default: 3000 }),
+  HOST: str({ default: 'localhost' })
+});
 
-export default {
-  port: process.env.PORT,
-  host: process.env.HOST,
-};
+export const { PORT, HOST } = env;
