@@ -310,5 +310,6 @@ fabric.properties
 .env.*
 !.env.example
 
+*.bak
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,pycharm,node

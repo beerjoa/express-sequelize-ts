@@ -10,7 +10,19 @@
       ],
       "@config": [
         "config"
-      ]
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ],
+      "@controllers/*": [
+        "controllers/*"
+      ],
+      "@routes/*": [
+        "routes/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
     },
     "strict": true,
     "moduleResolution": "node",
