@@ -22,8 +22,9 @@ express-sequelize-ts
 ### Install
 
 ```bash
-### make .env file using .env.example file
-$ cp .env.example .env
+### make .env.{NODE_ENV} file using .env.example file
+### EX) .env.development | .env.test
+$ cp .env.example .env.development
 
 ### To install
 $ yarn
@@ -36,11 +37,17 @@ $ yarn
 $ yarn dev
 ```
 
-### ~~Test~~
+### Test
 
 ```bash
-### run test
-$ yarn test
+### make .env.test file
+
+### run e2e test
+$ yarn test:e2e
+
+### run unit test
+$ yarn test:unit
+
 ```
 
 ## Reference
