@@ -1,4 +1,4 @@
-import IndexController from '@controllers/index.controller';
+import IndexController from '@/controllers/index.controller';
 
 describe('IndexController', () => {
   let indexController = new IndexController();

@@ -1,4 +1,4 @@
-import { IService } from '@interfaces/service.interface';
+import { IService } from '@/interfaces/service.interface';
 
 class IndexService implements IService {
   db = null;

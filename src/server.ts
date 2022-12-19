@@ -1,11 +1,11 @@
 import app from '@/app';
-import { HOST, PORT } from '@config';
+import config from '@/config';
 
-app.listen(PORT, HOST, () => {
+app.listen(config.PORT, config.HOST, () => {
   console.log(`
   ################################################
   ##              Server is running             ##
-  ##                 ${HOST}:${PORT}               ##
+  ##                 ${config.HOST}:${config.PORT}               ##
   ################################################
   `);
 });

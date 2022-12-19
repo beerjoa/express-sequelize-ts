@@ -1,4 +1,4 @@
-import { IController } from '@interfaces/controller.interface';
+import { IController } from '@/interfaces/controller.interface';
 import { Router } from 'express';
 export interface IRoute {
   path: string;
