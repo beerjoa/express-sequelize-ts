@@ -1,4 +1,4 @@
-import IndexRoute from '@routes/index.route';
+import IndexRoute from '@/routes/index.route';
 
 describe('IndexRoute', () => {
   let indexRoute = new IndexRoute();

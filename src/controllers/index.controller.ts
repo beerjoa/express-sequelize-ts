@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { IController } from '@interfaces/controller.interface';
-import IndexService from '@services/index.service';
-import catchAsync from '../utils/catch-async.util';
+import { IController } from '@/interfaces/controller.interface';
+import IndexService from '@/services/index.service';
+import catchAsync from '@/utils/catch-async.util';
 
 class IndexController implements IController {
   constructor(public service: IndexService = new IndexService()) {}

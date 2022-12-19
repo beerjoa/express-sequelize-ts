@@ -1,4 +1,4 @@
-import IndexService from '@services/index.service';
+import IndexService from '@/services/index.service';
 
 describe('IndexService', () => {
   let indexService = new IndexService();

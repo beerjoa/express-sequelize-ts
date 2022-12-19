@@ -1,3 +1,5 @@
+import IndexService from '@/services/index.service';
+
 export interface IController {
-  service: any;
+  service: IndexService;
 }
