@@ -1,11 +1,5 @@
-import app from '@/app';
-import config from '@/config';
+import App from '@/app';
 
-app.listen(config.PORT, config.HOST, () => {
-  console.log(`
-  ################################################
-  ##              Server is running             ##
-  ##                 ${config.HOST}:${config.PORT}               ##
-  ################################################
-  `);
-});
+const app = new App();
+
+app.listen();

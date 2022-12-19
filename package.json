@@ -1,7 +1,7 @@
 {
   "name": "express-sequelize-ts",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "src/server.ts",
   "author": "Jaeyong Shim <yoooong2@gmail.com>",
   "license": "MIT",
   "engines": {

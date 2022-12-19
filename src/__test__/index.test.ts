@@ -1,10 +1,11 @@
 import express from 'express';
 import request from 'supertest';
 
-import app from '@/app';
+import App from '@/app';
 
 describe('index', () => {
   let testApp: express.Application;
+  const { app } = new App();
   beforeAll(() => {
     testApp = app;
   });
