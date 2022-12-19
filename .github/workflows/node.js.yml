@@ -28,13 +28,13 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies
-    - run: npm ci
+      run: npm ci
     
     - name: Create test Environment
-    - run: cp .env.example .env.test
+      run: cp .env.example .env.test
     
     - name: Run e2e test
-    - run: npm test:e2e
+      run: npm test:e2e
     
     - name: Run unit test
-    - run: npm test:unit
+      run: npm test:unit
