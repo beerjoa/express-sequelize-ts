@@ -1,5 +1,7 @@
 # express-sequelize-ts
 
+[![node.js Actions Status](https://github.com/beerjoa/express-sequelize-ts/workflows/nodejs-master/badge.svg)](https://github.com/beerjoa/express-sequelize-ts/actions)
+
 express-sequelize-ts
 
 ## Features
