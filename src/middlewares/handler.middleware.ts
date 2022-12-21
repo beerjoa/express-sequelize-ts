@@ -1,5 +1,5 @@
 import config from '@/config';
-import logger from '@/config/logger';
+import logger from '@/utils/logger.util';
 import { Request, Response } from 'express';
 import morgan from 'morgan';
 

@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ts-node debugger",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "ts-node",
+      "runtimeArgs": [
+        "-r",
+        "tsconfig-paths/register",
+        "--transpile-only"
+      ],
+      "args": [
+        "src/server.ts",
+      ],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**"
+      ]
+    }
+  ]
+}

@@ -309,6 +309,8 @@ fabric.properties
 ### custom
 .env.*
 !.env.example
+*.sqlite
+.vscode/settings.json
 
 *.bak
 
