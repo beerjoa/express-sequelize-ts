@@ -1,13 +1,15 @@
 import compression from 'compression';
 import cors from 'cors';
-import express from 'express';
+import express, { json } from 'express';
 import helmet from 'helmet';
 import http from 'http';
 import { createHttpTerminator } from 'http-terminator';
 import https from 'https';
+import passport from 'passport';
 
 import config from '@/config';
 import databaseHandler from '@/config/database';
+import localStrategy from '@/config/passport/local';
 import { loggerHandler } from '@/middlewares/handler.middleware';
 import IndexRoute from '@/routes/index.route';
 import logger from '@/utils/logger.util';
@@ -78,6 +80,8 @@ class App implements IApp {
     });
   }
   private initMiddleware(): void {
+    this.app.use(json());
+
     if (this._env !== 'test') {
       this.app.use(loggerHandler.success);
       this.app.use(loggerHandler.error);
@@ -85,6 +89,9 @@ class App implements IApp {
     this.app.use(helmet());
     this.app.use(cors());
     this.app.use(compression());
+
+    this.app.use(passport.initialize());
+    passport.use('local', localStrategy);
   }
 }
 

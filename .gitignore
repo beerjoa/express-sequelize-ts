@@ -311,7 +311,8 @@ fabric.properties
 !.env.example
 *.sqlite
 .vscode/settings.json
-
+.devref.md
 *.bak
+backup
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,pycharm,node
