@@ -1,20 +1,14 @@
-import { User } from '@/database/models/user.model';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
 import passport from 'passport';
-
-import ApiError from '@/utils/api-error.util';
-import logger from '@/utils/logger.util';
-import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { Model } from 'sequelize-typescript';
-import { inspect } from 'util';
+
+import { User } from '@/database/models/user.model';
+import ApiError from '@/utils/api-error.util';
 
 type TAuthType = 'local';
 type TVerifyCallback = {
-  [K in TAuthType]: (
-    req: Request,
-    resolve: any,
-    reject: any
-  ) => (err: any, user: Model<User>, info: object) => void;
+  [K in TAuthType]: (req: Request, resolve: any, reject: any) => (err: any, user: Model<User>, info: object) => void;
 };
 
 const verifyCallback: TVerifyCallback = {
@@ -22,10 +16,7 @@ const verifyCallback: TVerifyCallback = {
     (req: Request, resolve: any, reject: any) =>
     (err: any, user: Model<User>, info: object): void => {
       if (err || !user) {
-        const error = new ApiError(
-          httpStatus.UNAUTHORIZED,
-          'Please authenticate'
-        );
+        const error = new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
         reject(error);
       }
 
@@ -34,19 +25,9 @@ const verifyCallback: TVerifyCallback = {
     }
 };
 
-const authMiddlewareFn = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  authType: TAuthType
-) => {
-  logger.debug(inspect(verifyCallback));
+const authMiddlewareFn = (req: Request, res: Response, next: NextFunction, authType: TAuthType) => {
   return new Promise((resolve, reject) => {
-    passport.authenticate(
-      authType,
-      { session: false },
-      verifyCallback[authType](req, resolve, reject)
-    );
+    passport.authenticate(authType, { session: false }, verifyCallback[authType](req, resolve, reject));
     next();
   });
 };
@@ -62,4 +43,5 @@ const auth =
         next(err);
       });
   };
+
 export default auth;

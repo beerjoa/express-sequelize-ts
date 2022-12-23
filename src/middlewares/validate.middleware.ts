@@ -1,18 +1,16 @@
-import ApiError from '@/utils/api-error.util';
 import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
+
+import ApiError from '@/utils/api-error.util';
 
 type TValidateSchemaKey = 'body' | 'param' | 'query';
 type TValidateSchema = {
   [K in TValidateSchemaKey]: any | undefined;
 };
 
-const validateSchemasFn = (
-  req: Request,
-  schemas: Partial<TValidateSchema>
-): Promise<ApiError | void> => {
+const validateSchemasFn = (req: Request, schemas: Partial<TValidateSchema>): Promise<ApiError | void> => {
   return new Promise<ApiError | void>(async (resolve, reject) => {
     const schemaKeys = Object.keys(schemas) as TValidateSchemaKey[];
     for await (const key of schemaKeys) {
@@ -22,10 +20,7 @@ const validateSchemasFn = (
 
       validate(convertedData).then((errors: ValidationError[]) => {
         if (errors.length > 0) {
-          const apiError = new ApiError(
-            httpStatus.BAD_REQUEST,
-            errors.toString()
-          );
+          const apiError = new ApiError(httpStatus.BAD_REQUEST, errors.toString());
           reject(apiError);
         }
       });

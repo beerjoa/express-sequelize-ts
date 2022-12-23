@@ -1,15 +1,12 @@
-import config from '@/config';
-import logger from '@/utils/logger.util';
 import { Request, Response } from 'express';
 import morgan from 'morgan';
 
-morgan.token(
-  'message',
-  (req: Request, res: Response) => res.locals.errorMessage || ''
-);
+import config from '@/config';
+import logger from '@/utils/logger.util';
 
-const getIpFormat = () =>
-  config.NODE_ENV === 'production' ? ':remote-addr - ' : '';
+morgan.token('message', (req: Request, res: Response) => res.locals.errorMessage || '');
+
+const getIpFormat = () => (config.NODE_ENV === 'production' ? ':remote-addr - ' : '');
 const successResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms`;
 const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`;
 

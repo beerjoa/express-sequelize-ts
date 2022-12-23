@@ -1,13 +1,8 @@
 export default class ApiError extends Error {
-  private statusCode: number;
-  private isOperational: boolean;
+  public readonly statusCode: number;
+  public readonly isOperational: boolean;
 
-  constructor(
-    statusCode: number,
-    message: string,
-    isOperational = true,
-    stack = ''
-  ) {
+  constructor(statusCode: number, message: string, isOperational = true, stack = '') {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;
