@@ -12,7 +12,7 @@
     "build": "tsc -p ./src",
     "dev": "cross-env NODE_ENV=development nodemon",
     "test:e2e": "jest --config ./jest.config.js src/__test__/*",
-    "test:unit": "jest src/*/*.test.ts --config ./jest.config.js --testPathIgnorePatterns src/__test__/* "
+    "test:unit": "jest --config ./jest.config.js --testPathIgnorePatterns src/__test__/* --testPathPattern"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
