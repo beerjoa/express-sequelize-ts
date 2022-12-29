@@ -1,16 +1,14 @@
 import { plainToInstance } from 'class-transformer';
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import httpStatus from 'http-status';
 
 import config from '@/config';
-import { User } from '@/database/models/user.model';
 import CreateUserDto from '@/dtos/create-user.dto';
 import SignInUserDto from '@/dtos/sign-in-user.dto';
 import { IController } from '@/interfaces/controller.interface';
 import AuthService from '@/services/auth.service';
 import catchAsync from '@/utils/catch-async.util';
 import { http } from '@/utils/handler.util';
-import { Model } from 'sequelize-typescript';
 
 class AuthController implements IController {
   // prettier-ignore
@@ -21,42 +19,42 @@ class AuthController implements IController {
   public signUp = catchAsync(async (req: Request, res: Response): Promise<Response> => {
     const createUserData = plainToInstance(CreateUserDto, req.body);
 
-    const user = await this.service.signUp(createUserData);
+    const signUpData = await this.service.signUp(createUserData);
 
-    if (user instanceof Error) {
-      return http.sendErrorResponse(res, 400, user);
+    if (signUpData instanceof Error) {
+      return http.sendErrorResponse(res, signUpData.statusCode, signUpData);
     }
-    const token = await this.__createToken(user);
+
+    const { user, token } = signUpData;
     this.__setTokenCookie(res, token);
 
-    return http.sendJsonResponse(res, 200, user);
+    return http.sendJsonResponse(res, httpStatus.CREATED, user);
   });
 
   public signIn = catchAsync(async (req: Request, res: Response): Promise<Response> => {
     const signInUserData = plainToInstance(SignInUserDto, req.body);
 
-    const user = await this.service.signIn(signInUserData);
+    const signInData = await this.service.signIn(signInUserData);
 
-    if (user instanceof Error) {
-      return http.sendErrorResponse(res, 400, user);
+    if (signInData instanceof Error) {
+      return http.sendErrorResponse(res, signInData.statusCode, signInData);
     }
-    const token = await this.__createToken(user);
+
+    const { user, token } = signInData;
+
     this.__setTokenCookie(res, token);
 
-    return http.sendJsonResponse(res, 200, user);
+    return http.sendJsonResponse(res, httpStatus.OK, user);
   });
 
   private __setTokenCookie = (res: Response, token: string): void => {
     const cookieOptions = {
       httpOnly: true,
       maxAge: config.JWT_EXPIRATION,
-      secure: config.NODE_ENV === 'production' ? true : false
+      secure: config.NODE_ENV === 'production'
     };
     res.cookie(config.JWT_COOKIE_NAME, token, cookieOptions);
   };
-  private async __createToken(user: Model<User>): Promise<string> {
-    return jwt.sign({ user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRATION });
-  }
 }
 
 export default AuthController;

@@ -4,7 +4,7 @@ import { Response } from 'express';
 
 export const http = {
   sendJsonResponse: (res: Response, status: number, responseData: any) => {
-    logger.info(`{ status: ${status}, data: ${JSON.stringify(responseData)} }`);
+    logger.debug(`{ status: ${status}, data: ${JSON.stringify(responseData)} }`);
     return res.status(status).json(responseData).end();
   },
   sendErrorResponse: (res: Response, status: number, error: ApiError) => {

@@ -4,6 +4,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
 
 import ApiError from '@/utils/api-error.util';
+import { http } from '@/utils/handler.util';
 
 type TValidateSchemaKey = 'body' | 'param' | 'query';
 type TValidateSchema = {
@@ -20,7 +21,7 @@ const validateSchemasFn = (req: Request, schemas: Partial<TValidateSchema>): Pro
 
       validate(convertedData).then((errors: ValidationError[]) => {
         if (errors.length > 0) {
-          const apiError = new ApiError(httpStatus.BAD_REQUEST, errors.toString());
+          const apiError = new ApiError(httpStatus.UNPROCESSABLE_ENTITY, errors.toString());
           reject(apiError);
         }
       });
@@ -37,7 +38,7 @@ const validateSchemas =
         next();
       })
       .catch((err) => {
-        next(err);
+        next(http.sendErrorResponse(res, httpStatus.UNPROCESSABLE_ENTITY, err));
       });
   };
 
