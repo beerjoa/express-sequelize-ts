@@ -1,5 +1,7 @@
-import { IController } from '@/interfaces/controller.interface';
 import { Router } from 'express';
+
+import { IController } from '@/interfaces/controller.interface';
+
 export interface IRoute {
   path: string;
   router: Router;

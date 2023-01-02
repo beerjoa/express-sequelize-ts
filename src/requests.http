@@ -1,0 +1,28 @@
+### TEST
+GET http://localhost:3000/api
+content-type: application/json
+
+
+### sign-up
+POST http://localhost:3000/api/auth/sign-up
+content-type: application/json
+
+{
+  "name":"tester",
+  "email":"tester@email.com",
+  "password":"12345"
+}
+
+
+### sign-in
+POST http://localhost:3000/api/auth/sign-in
+content-type: application/json
+
+{
+  "email":"tester@email.com",
+  "password":"12345"
+}
+
+### sign-out
+GET http://localhost:3000/api/auth/sign-out
+content-type: application/json

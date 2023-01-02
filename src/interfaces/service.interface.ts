@@ -1,3 +1,1 @@
-export interface IService {
-  db?: any;
-}
+export interface IService {}

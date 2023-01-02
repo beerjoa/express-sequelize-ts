@@ -2,7 +2,7 @@
 
 [![node.js Actions Status](https://github.com/beerjoa/express-sequelize-ts/workflows/nodejs-master/badge.svg)](https://github.com/beerjoa/express-sequelize-ts/actions)
 
-express-sequelize-ts
+A TypeScript-based boilerplate project for creating a web application using the Express framework and the Sequelize ORM.
 
 ## Features
 
@@ -16,8 +16,8 @@ express-sequelize-ts
 ## Requirements
 
 - Node.js
-- Typescript
-- yarn
+- Yarn
+- SQLite (or any other database supported by Sequelize)
 
 ## Usage
 

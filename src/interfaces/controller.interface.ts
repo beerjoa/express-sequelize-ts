@@ -1,5 +1,5 @@
-import IndexService from '@/services/index.service';
+import { IService } from '@/interfaces/service.interface';
 
 export interface IController {
-  service: IndexService;
+  service: IService;
 }
