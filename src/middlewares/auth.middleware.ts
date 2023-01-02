@@ -51,7 +51,7 @@ const auth =
         next();
       })
       .catch((err) => {
-        next(http.sendErrorResponse(res, err.statusCode, err));
+        return http.sendErrorResponse(res, err.statusCode, err);
       });
   };
 

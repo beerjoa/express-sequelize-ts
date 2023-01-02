@@ -47,6 +47,14 @@ class AuthController implements IController {
     return http.sendJsonResponse(res, httpStatus.OK, user);
   });
 
+  public signOut = catchAsync(async (req: Request, res: Response): Promise<Response> => {
+    // TODO
+    await this.service.signOut();
+    const reqUser = req.user;
+    res.clearCookie(config.JWT_COOKIE_NAME);
+    return http.sendJsonResponse(res, httpStatus.OK, { message: 'User signed out successfully' });
+  });
+
   private __setTokenCookie = (res: Response, token: string): void => {
     const cookieOptions = {
       httpOnly: true,

@@ -54,6 +54,12 @@ class AuthService implements IService {
     return { user: findUser, token };
   }
 
+  public async signOut(): Promise<void> {
+    // TODO
+    // something logout logic
+    // ex) update logout date in db
+  }
+
   public async comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
     return await bcrypt.compare(plainPassword, hashedPassword);
   }

@@ -11,8 +11,8 @@
     "start": "node dist/app.js",
     "build": "tsc -p ./src",
     "dev": "cross-env NODE_ENV=development nodemon",
-    "test:e2e": "jest --config ./jest.config.js src/__test__/*",
-    "test:unit": "jest --config ./jest.config.js --testPathIgnorePatterns src/__test__/* --testPathPattern"
+    "test:e2e": "jest --runInBand --config ./jest.config.ts src/__test__/*.test.ts",
+    "test:unit": "jest --runInBand --config ./jest.config.ts --testPathIgnorePatterns src/__test__/* --testPathPattern"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

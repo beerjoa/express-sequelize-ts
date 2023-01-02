@@ -53,7 +53,9 @@ class SequelizeSQLiteHandler implements IDatabaseHandler {
   async disconnect(): Promise<void> {
     await this._sequelize.close();
     if (this._env === 'test') {
-      fs.unlinkSync(this._dbPath);
+      if (fs.existsSync(this._dbPath)) {
+        fs.unlinkSync(this._dbPath);
+      }
     }
   }
 }

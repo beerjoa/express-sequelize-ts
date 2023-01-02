@@ -32,6 +32,13 @@ class AuthRoute implements IRoute {
         auth('local'),
         this.controller.signIn
       );
+
+    this.router
+      .route(`${this.path}/sign-out`)
+      .get(
+        auth('jwt'),
+        this.controller.signOut
+      );
   }
 }
 
