@@ -1,31 +1,35 @@
+import bcrypt from 'bcrypt';
+import { IStrategyOptions, Strategy as LocalStrategy, VerifyFunction } from 'passport-local';
+
 import { sequelize } from '@/database/models';
 import { User } from '@/database/models/user.model';
-import {
-  IStrategyOptions,
-  Strategy as LocalStrategy,
-  VerifyFunction
-} from 'passport-local';
 
 const localOptions: IStrategyOptions = {
   usernameField: 'email',
   passwordField: 'password'
 };
 
-const localVerify: VerifyFunction = async (email, password, done) => {
+const comparePassword = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
+  return await bcrypt.compare(plainPassword, hashedPassword);
+};
+const localVerify: VerifyFunction = async (email: string, password: string, done) => {
   try {
     const userRepository = sequelize.getRepository(User);
 
-    const user = await userRepository.findOne({
+    const reqUser = await userRepository.findOne({
       where: {
-        email,
-        password
+        email
       }
     });
 
-    if (!user) {
+    const hashedPassword = reqUser ? reqUser.password : '';
+    const isPasswordMatching = await comparePassword(password, hashedPassword);
+
+    if (!isPasswordMatching || !reqUser) {
       return done(null, false, { message: 'Incorrect email or password.' });
     }
-    return done(null, user, { message: 'Logged In Successfully' });
+
+    return done(null, reqUser, { message: 'Logged In Successfully' });
   } catch (error) {
     return done(error, false, { message: 'Something went wrong' });
   }

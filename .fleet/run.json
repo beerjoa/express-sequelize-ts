@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "type": "command",
+      "name": "dev run",
+      "program": "yarn",
+      "args": ["dev"]
+    },
+    {
+      "type": "command",
+      "name": "unit test",
+      "program": "yarn",
+      "args": ["test:unit"]
+    },
+    {
+      "type": "command",
+      "name": "e2e test",
+      "program": "yarn",
+      "args": ["test:e2e"]
+    }
+  ]
+}

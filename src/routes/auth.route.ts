@@ -21,9 +21,7 @@ class AuthRoute implements IRoute {
     this.router
       .route(`${this.path}/sign-up`)
       .post(
-        validateSchemas({
-          body: CreateUserDto
-        }),
+        validateSchemas({ body: CreateUserDto }),
         this.controller.signUp
       );
 

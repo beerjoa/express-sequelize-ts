@@ -5,8 +5,9 @@ import { Model } from 'sequelize-typescript';
 
 import { User } from '@/database/models/user.model';
 import ApiError from '@/utils/api-error.util';
+import { http } from '@/utils/handler.util';
 
-type TAuthType = 'local';
+type TAuthType = 'local' | 'jwt';
 type TVerifyCallback = {
   [K in TAuthType]: (req: Request, resolve: any, reject: any) => (err: any, user: Model<User>, info: object) => void;
 };
@@ -14,9 +15,20 @@ type TVerifyCallback = {
 const verifyCallback: TVerifyCallback = {
   local:
     (req: Request, resolve: any, reject: any) =>
-    (err: any, user: Model<User>, info: object): void => {
+    (err: any, user: Model<User>, info: any): void => {
       if (err || !user) {
-        const error = new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+        const error = new ApiError(httpStatus.UNAUTHORIZED, info.message);
+        reject(error);
+      }
+
+      req.user = user;
+      resolve();
+    },
+  jwt:
+    (req: Request, resolve: any, reject: any) =>
+    (err: any, user: Model<User>, info: any): void => {
+      if (err || !user) {
+        const error = new ApiError(httpStatus.UNAUTHORIZED, info.message);
         reject(error);
       }
 
@@ -27,20 +39,19 @@ const verifyCallback: TVerifyCallback = {
 
 const authMiddlewareFn = (req: Request, res: Response, next: NextFunction, authType: TAuthType) => {
   return new Promise((resolve, reject) => {
-    passport.authenticate(authType, { session: false }, verifyCallback[authType](req, resolve, reject));
-    next();
+    passport.authenticate(authType, { session: false }, verifyCallback[authType](req, resolve, reject))(req, res, next);
   });
 };
 
 const auth =
   (authType: TAuthType): RequestHandler =>
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    return await authMiddlewareFn(req, res, next, authType)
+    await authMiddlewareFn(req, res, next, authType)
       .then(() => {
         next();
       })
       .catch((err) => {
-        next(err);
+        next(http.sendErrorResponse(res, err.statusCode, err));
       });
   };
 

@@ -38,7 +38,7 @@ const validateSchemas =
         next();
       })
       .catch((err) => {
-        next(http.sendErrorResponse(res, httpStatus.UNPROCESSABLE_ENTITY, err));
+        next(http.sendErrorResponse(res, err.statusCode, err));
       });
   };
 

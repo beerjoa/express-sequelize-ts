@@ -1,4 +1,5 @@
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { json } from 'express';
 import helmet from 'helmet';
@@ -9,6 +10,7 @@ import passport from 'passport';
 
 import config from '@/config';
 import databaseHandler from '@/config/database';
+import jwtStrategy from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
 import { loggerHandler } from '@/middlewares/handler.middleware';
 import IndexRoute from '@/routes/index.route';
@@ -50,9 +52,7 @@ class App implements IApp {
 
   public start() {
     this._server = this.app.listen(this._port, this._host, () => {
-      logger.info(
-        `\n🟩 Server is running ✅\n🟩 env: ${this._env}\n🟩 ${this._host}:${this._port}`
-      );
+      logger.info(`\n🟩 Server is running ✅\n🟩 env: ${this._env}\n🟩 ${this._host}:${this._port}`);
     });
   }
 
@@ -81,6 +81,7 @@ class App implements IApp {
   }
   private initMiddleware(): void {
     this.app.use(json());
+    this.app.use(cookieParser());
 
     if (this._env !== 'test') {
       this.app.use(loggerHandler.success);
@@ -92,6 +93,7 @@ class App implements IApp {
 
     this.app.use(passport.initialize());
     passport.use('local', localStrategy);
+    passport.use('jwt', jwtStrategy);
   }
 }
 
