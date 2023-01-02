@@ -44,4 +44,4 @@ jobs:
       - name: Run unit test
         uses: borales/actions-yarn@v4
         with:
-          cmd: test:unit src/*/*.test.ts
+          cmd: test:unit:all
