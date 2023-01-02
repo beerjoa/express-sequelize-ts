@@ -48,10 +48,5 @@ $ yarn dev
 $ yarn test:e2e
 
 ### run unit test
-$ yarn test:unit
-
+$ yarn test:unit src/*/*.test.ts
 ```
-
-## Reference
-
--
