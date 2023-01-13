@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  node-app:
+    container_name: node-app-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - ./.env.test:/data/app/.env.test
+      - ./src:/data/app/src
+    command: yarn test:e2e
+    tty: true

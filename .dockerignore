@@ -1,0 +1,11 @@
+.git
+.gitignore
+.vscode
+.fleet
+.github
+.devref.md
+node_modules
+backup
+*.bak
+*.sqlite
+yarn-error.log

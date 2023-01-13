@@ -1,0 +1,38 @@
+version: '3'
+
+volumes:
+  redis_data:
+
+networks:
+  node-network:
+    driver: bridge
+
+services:
+  node-app:
+    container_name: node-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis
+    volumes:
+      - ./.env.development:/data/app/.env.development
+      - ./src:/data/app/src
+      - ./nodemon.json:/data/app/nodemon.json
+    command: yarn dev
+    networks:
+      - node-network
+
+  redis:
+    container_name: redis-app
+    image: redis:6.2.6
+    command: ['redis-server', '--bind', '0.0.0.0', '--port', '6379']
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - node-network

@@ -11,42 +11,56 @@ A TypeScript-based boilerplate project for creating a web application using the 
 - [sequelize-typescript](https://www.jsdocs.io/package/sequelize-typescript)
   > Node.js ORM for Oracle, Postgres, MySQL, MariaDB, SQLite and SQL Server, and more. Featuring solid transaction support, relations, eager and lazy loading, read replication and more.
 - [SQLite](https://www.postgresql.org/docs)
+
   > C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine.
+
+- [Docker](https://www.docker.com/)
+  > Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.
 
 ## Requirements
 
 - Node.js
 - Yarn
 - SQLite (or any other database supported by Sequelize)
+- Docker (optional)
 
 ## Usage
 
-### Install
+### Set Env.
 
 ```bash
 ### make .env.{NODE_ENV} file using .env.example file
 ### EX) .env.development | .env.test
 $ cp .env.example .env.development
+```
 
-### To install
+### Install
+
+```bash
+### using yarn
 $ yarn
 ```
 
 ### Run
 
 ```bash
-### run dev app
-$ yarn dev
+### using docker
+$ yarn docker:dev | docker:prod | docker:test
+
+### using yarn
+$ yarn dev | prod | test:e2e | test:unit:all | test:unit {path}
 ```
 
 ### Test
 
 ```bash
-### make .env.test file
+### using docker
+$ yarn docker:test
 
-### run e2e test
-$ yarn test:e2e
-
-### run unit test
-$ yarn test:unit src/*/*.test.ts
+### using yarn
+$ yarn test:unit:all | test:unit {path}
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/beerjoa/express-sequelize-ts/blob/main/LICENSE.md) file for details.
