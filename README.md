@@ -2,20 +2,32 @@
 
 [![node.js Actions Status](https://github.com/beerjoa/express-sequelize-ts/workflows/nodejs-master/badge.svg)](https://github.com/beerjoa/express-sequelize-ts/actions)
 
-A TypeScript-based boilerplate project for creating a web application using the Express framework and the Sequelize ORM.
+![thumb](images/thumb.jpg)
+
+## Description
+
+A TypeScript-based boilerplate for creating a web application using the Express framework and the Sequelize ORM. \
+Made with [Express](https://expressjs.com/en/4x/api.html), [TypeScript](https://www.typescriptlang.org/docs), [ESLint](https://eslint.org/docs/latest), [Prettier](https://prettier.io/docs/en), [Jest](https://jestjs.io/docs/getting-started), and [Docker](https://docs.docker.com).
 
 ## Features
 
-- [Typescript](https://www.typescriptlang.org/docs/)
-  > JavaScript with syntax for types.
-- [sequelize-typescript](https://www.jsdocs.io/package/sequelize-typescript)
-  > Node.js ORM for Oracle, Postgres, MySQL, MariaDB, SQLite and SQL Server, and more. Featuring solid transaction support, relations, eager and lazy loading, read replication and more.
-- [SQLite](https://www.postgresql.org/docs)
+#### Developer experience
 
-  > C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine.
+- 🚚 [Express](https://expressjs.com/en/4x/api.html) for handling HTTP requests and responses
+- 💾 [Sequelize](https://github.com/sequelize/sequelize-typescript) ORM for interacting with a database
+- 🟦 [TypeScript](https://www.typescriptlang.org/docs) for strong typing and better code organization
+- 🛠 [Jest](https://jestjs.io/docs/getting-started) for unit and integration testing
+- 🚧 [ESLint](https://eslint.org/docs/latest) for linting
+- 🎨 [Prettier](https://prettier.io/docs/en) for code formatting
+- 🐬 [Docker](https://docs.docker.com) for containerization
 
-- [Docker](https://www.docker.com/)
-  > Docker is a set of platform as a service products that use OS-level virtualization to deliver software in packages called containers.
+#### Back-end app features
+
+- 🚫 JWT authentication for secure access to the API
+- 🎢 Layered architecture. (Controller, Service, Repository, Model)
+- ♻️ Data Transport Object (DTO) for data validation
+- 📦 Dependency injection for better code organization
+- ~~_(WIP) API documentation using Swagger_~~
 
 ## Requirements
 
@@ -24,42 +36,69 @@ A TypeScript-based boilerplate project for creating a web application using the 
 - SQLite (or any other database supported by Sequelize)
 - Docker (optional)
 
-## Usage
+## Getting Started
 
-### Set Env.
+Run the following commands to set environment variables and install dependencies:
+
+#### set environment variables
 
 ```bash
-### make .env.{NODE_ENV} file using .env.example file
-### EX) .env.development | .env.test
+## set environment variables
+#### make .env.{NODE_ENV} file using .env.example file
+#### EX) .env.development | .env.test
 $ cp .env.example .env.development
 ```
 
-### Install
+#### install dependencies
 
 ```bash
-### using yarn
-$ yarn
+## install dependencies
+#### using yarn
+$ yarn install
+
+#### using Docker
+$ yarn docker:build
 ```
 
-### Run
+then, you can run locally in development and test mode:
 
 ```bash
-### using docker
-$ yarn docker:dev | docker:prod | docker:test
+## run locally in development and test mode
+#### using yarn
+$ yarn dev | test:e2e | test:unit:all | test:unit {path}
 
-### using yarn
-$ yarn dev | prod | test:e2e | test:unit:all | test:unit {path}
+#### using Docker
+$ yarn docker:dev | docker:test
 ```
 
-### Test
+call test API endpoints:
+
+```json
+// http://localhost:3000/api
+// Content-Type: application/json
+{
+  "message": "Hello World"
+}
+```
+
+## Deploy to production
+
+you can deploy to production using yarn or Docker:
 
 ```bash
-### using docker
-$ yarn docker:test
+## using yarn
+$ yarn build
+$ yarn start
 
-### using yarn
-$ yarn test:unit:all | test:unit {path}
+## using Docker
+$ yarn docker:prod
 ```
+
+## What's next?
+
+- [ ] Add swagger
+- [ ] Connect redis for session and cache
+- [ ] Handle scheduled tasks using bull
 
 ## License
 
