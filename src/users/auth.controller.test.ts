@@ -2,11 +2,11 @@ import { getMockReq, getMockRes } from '@jest-mock/express';
 import httpStatus from 'http-status';
 
 import config from '@/config';
-import AuthController from '@/controllers/auth.controller';
-import CreateUserDto from '@/dtos/create-user.dto';
-import AuthService from '@/services/auth.service';
+import AuthController from '@/users/auth.controller';
+import AuthService from '@/users/auth.service';
+import CreateUserDto from '@/users/dtos/create-user.dto';
+import SignInUserDto from '@/users/dtos/sign-in-user.dto';
 import ApiError from '@/utils/api-error.util';
-import SignInUserDto from '../dtos/sign-in-user.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;

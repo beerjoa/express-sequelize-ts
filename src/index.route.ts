@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import IndexController from '@/controllers/index.controller';
+import IndexController from '@/index.controller';
 import { IRoute } from '@/interfaces/route.interface';
-import AuthRoute from '@/routes/auth.route';
+import AuthRoute from '@/users/auth.route';
 class IndexRoute implements IRoute {
   public path = '/';
   public router = Router();

@@ -1,4 +1,4 @@
-import AuthRoute from '@/routes/auth.route';
+import AuthRoute from '@/users/auth.route';
 
 describe('AuthRoute', () => {
   let authRoute = new AuthRoute();

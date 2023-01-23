@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
 import config from '@/config';
-import CreateUserDto from '@/dtos/create-user.dto';
-import SignInUserDto from '@/dtos/sign-in-user.dto';
 import { IController } from '@/interfaces/controller.interface';
-import AuthService from '@/services/auth.service';
+import AuthService from '@/users/auth.service';
+import CreateUserDto from '@/users/dtos/create-user.dto';
+import SignInUserDto from '@/users/dtos/sign-in-user.dto';
 import catchAsync from '@/utils/catch-async.util';
 import { http } from '@/utils/handler.util';
 

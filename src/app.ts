@@ -12,8 +12,9 @@ import config from '@/config';
 import databaseHandler from '@/config/database';
 import jwtStrategy from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
+import IndexRoute from '@/index.route';
 import { loggerHandler } from '@/middlewares/handler.middleware';
-import IndexRoute from '@/routes/index.route';
+import swaggerDocument from '@/swagger.json';
 import logger from '@/utils/logger.util';
 
 type ServerInstanceType = http.Server | https.Server | null;

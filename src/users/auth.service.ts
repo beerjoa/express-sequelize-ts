@@ -6,9 +6,9 @@ import { Model, Repository } from 'sequelize-typescript';
 import config from '@/config';
 import { sequelize } from '@/database/models';
 import { User } from '@/database/models/user.model';
-import CreateUserDto from '@/dtos/create-user.dto';
-import SignInUserDto from '@/dtos/sign-in-user.dto';
 import { IService } from '@/interfaces/service.interface';
+import CreateUserDto from '@/users/dtos/create-user.dto';
+import SignInUserDto from '@/users/dtos/sign-in-user.dto';
 import ApiError from '@/utils/api-error.util';
 
 type TSignedUser = {

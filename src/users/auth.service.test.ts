@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 
-import CreateUserDto from '@/dtos/create-user.dto';
-import SignInUserDto from '@/dtos/sign-in-user.dto';
-import AuthService from '@/services/auth.service';
+import AuthService from '@/users/auth.service';
+import CreateUserDto from '@/users/dtos/create-user.dto';
+import SignInUserDto from '@/users/dtos/sign-in-user.dto';
 import ApiError from '@/utils/api-error.util';
 
 describe('AuthService', () => {
