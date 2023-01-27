@@ -3,9 +3,9 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
 import config from '@/config';
-import CreateUserDto from '@/dtos/create-user.dto';
-import SignInUserDto from '@/dtos/sign-in-user.dto';
 import { IController } from '@/interfaces/controller.interface';
+import CreateUserDto from '@/models/dtos/create-user.dto';
+import SignInUserDto from '@/models/dtos/sign-in-user.dto';
 import AuthService from '@/services/auth.service';
 import catchAsync from '@/utils/catch-async.util';
 import { http } from '@/utils/handler.util';

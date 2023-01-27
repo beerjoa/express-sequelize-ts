@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Sequelize } from 'sequelize-typescript';
 
 import config from '@/config';
-import { User } from '@/database/models/user.model';
+import { User } from '@/models/entities/user.entity';
 import logger from '@/utils/logger.util';
 
 type DatabaseInstanceType = Sequelize | any;

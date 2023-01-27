@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 
-import CreateUserDto from '@/dtos/create-user.dto';
-import SignInUserDto from '@/dtos/sign-in-user.dto';
+import CreateUserDto from '@/models/dtos/create-user.dto';
+import SignInUserDto from '@/models/dtos/sign-in-user.dto';
 import AuthService from '@/services/auth.service';
 import ApiError from '@/utils/api-error.util';
 

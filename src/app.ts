@@ -9,7 +9,7 @@ import https from 'https';
 import passport from 'passport';
 
 import config from '@/config';
-import databaseHandler from '@/config/database';
+import databaseHandler from '@/config/database/handler';
 import jwtStrategy from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
 import { loggerHandler } from '@/middlewares/handler.middleware';

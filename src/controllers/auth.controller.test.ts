@@ -3,10 +3,10 @@ import httpStatus from 'http-status';
 
 import config from '@/config';
 import AuthController from '@/controllers/auth.controller';
-import CreateUserDto from '@/dtos/create-user.dto';
+import CreateUserDto from '@/models/dtos/create-user.dto';
 import AuthService from '@/services/auth.service';
 import ApiError from '@/utils/api-error.util';
-import SignInUserDto from '../dtos/sign-in-user.dto';
+import SignInUserDto from '../models/dtos/sign-in-user.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;

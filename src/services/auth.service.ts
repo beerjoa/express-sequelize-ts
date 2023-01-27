@@ -4,11 +4,11 @@ import jwt from 'jsonwebtoken';
 import { Model, Repository } from 'sequelize-typescript';
 
 import config from '@/config';
-import { sequelize } from '@/database/models';
-import { User } from '@/database/models/user.model';
-import CreateUserDto from '@/dtos/create-user.dto';
-import SignInUserDto from '@/dtos/sign-in-user.dto';
+import { sequelize } from '@/config/database';
 import { IService } from '@/interfaces/service.interface';
+import CreateUserDto from '@/models/dtos/create-user.dto';
+import SignInUserDto from '@/models/dtos/sign-in-user.dto';
+import { User } from '@/models/entities/user.entity';
 import ApiError from '@/utils/api-error.util';
 
 type TSignedUser = {

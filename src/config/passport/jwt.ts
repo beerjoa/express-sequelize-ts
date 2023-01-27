@@ -1,8 +1,8 @@
 import { Strategy as JwtStrategy, StrategyOptions, VerifiedCallback, VerifyCallback } from 'passport-jwt';
 
 import config from '@/config';
-import { sequelize } from '@/database/models';
-import { User } from '@/database/models/user.model';
+import { sequelize } from '@/config/database';
+import { User } from '@/models/entities/user.entity';
 
 const cookieExtractJwt = (req: any) => {
   let token = null;
