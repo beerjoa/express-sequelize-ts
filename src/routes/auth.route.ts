@@ -19,6 +19,13 @@ class AuthRoute implements IRoute {
   // prettier-ignore
   initRoutes(): void {
     this.router
+      .route(`${this.path}/who-am-i`)
+      .get(
+        auth('jwt'),
+        this.controller.whoAmI
+      );
+
+    this.router
       .route(`${this.path}/sign-up`)
       .post(
         validateSchemas({ body: CreateUserDto }),
@@ -38,6 +45,13 @@ class AuthRoute implements IRoute {
       .get(
         auth('jwt'),
         this.controller.signOut
+      );
+
+    this.router
+      .route(`${this.path}/refresh-token`)
+      .get(
+        auth('jwt-refresh'),
+        this.controller.refreshToken
       );
   }
 }

@@ -37,7 +37,10 @@ describe('AuthService', () => {
 
         await expect(authService.signUp(createUserData)).resolves.toMatchObject({
           user: createUser,
-          token: expect.any(String)
+          token: expect.objectContaining({
+            accessToken: expect.any(String),
+            refreshToken: expect.any(String)
+          })
         });
       });
     });
@@ -84,9 +87,41 @@ describe('AuthService', () => {
         authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUser));
         authService.comparePassword = jest.fn().mockReturnValue(true);
 
-        await expect(authService.signIn(createUserData)).resolves.toMatchObject({
+        await expect(authService.signIn(signInUserData)).resolves.toMatchObject({
           user: signInUser,
-          token: expect.any(String)
+          token: expect.objectContaining({
+            accessToken: expect.any(String),
+            refreshToken: expect.any(String)
+          })
+        });
+      });
+    });
+  });
+
+  describe('when calling signOut', () => {
+    it('should be defined', () => {
+      expect(authService.signOut).toBeDefined();
+    });
+  });
+
+  describe('when calling refreshToken', () => {
+    it('should be defined', () => {
+      expect(authService.refreshToken).toBeDefined();
+    });
+
+    it('should return a refresh token', async () => {
+      const signInUser = { ...createUserData, id: 0 };
+      authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUser));
+      authService.comparePassword = jest.fn().mockReturnValue(true);
+
+      await authService.signIn(signInUserData).then(async (res: any) => {
+        const refreshToken = res.token.refreshToken;
+
+        await expect(authService.refreshToken(refreshToken)).resolves.toMatchObject({
+          token: expect.objectContaining({
+            accessToken: expect.any(String),
+            refreshToken: expect.any(String)
+          })
         });
       });
     });

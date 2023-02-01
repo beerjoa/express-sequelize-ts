@@ -97,7 +97,6 @@ $ yarn docker:prod
 ## What's next?
 
 - [ ] Add swagger
-- [ ] Connect redis for session and cache
 - [ ] Handle scheduled tasks using bull
 
 ## License

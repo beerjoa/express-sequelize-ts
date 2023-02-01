@@ -39,12 +39,15 @@ describe('auth', () => {
         .expect(httpStatus.CREATED)
         .then((response) => {
           expect(response.body).toMatchObject({
-            id: expect.any(Number),
-            email: createUserData.email,
-            name: createUserData.name,
-            password: expect.any(String),
-            updatedAt: expect.any(String),
-            createdAt: expect.any(String)
+            access_token: expect.any(String),
+            user: {
+              id: expect.any(Number),
+              email: createUserData.email,
+              name: createUserData.name,
+              password: expect.any(String),
+              updatedAt: expect.any(String),
+              createdAt: expect.any(String)
+            }
           });
         });
     });
@@ -90,12 +93,15 @@ describe('auth', () => {
         .expect(httpStatus.OK)
         .then((response) => {
           expect(response.body).toMatchObject({
-            id: expect.any(Number),
-            email: createUserData.email,
-            name: createUserData.name,
-            password: expect.any(String),
-            updatedAt: expect.any(String),
-            createdAt: expect.any(String)
+            access_token: expect.any(String),
+            user: {
+              id: expect.any(Number),
+              email: createUserData.email,
+              name: createUserData.name,
+              password: expect.any(String),
+              updatedAt: expect.any(String),
+              createdAt: expect.any(String)
+            }
           });
         });
     });
@@ -156,21 +162,17 @@ describe('auth', () => {
         .expect('Content-Type', /json/)
         .expect(httpStatus.OK)
         .then((response) => {
-          response.header['set-cookie'].forEach((cookie: string) => {
-            if (cookie.includes(config.JWT_COOKIE_NAME)) {
-              token = cookie.split(';')[0].split('=')[1];
-            }
-          });
+          token = response.body?.access_token;
         });
 
       await request(testApp)
         .get('/api/auth/sign-out')
-        .set('Cookie', `${config.JWT_COOKIE_NAME}=${token}`)
+        .set('Authorization', `bearer ${token}`)
         .expect('Content-Type', /json/)
         .expect(httpStatus.OK)
         .then((response) => {
           expect(response.body).toMatchObject({
-            message: 'User signed out successfully'
+            message: 'Sign out successfully'
           });
         });
     });
@@ -186,7 +188,7 @@ describe('auth', () => {
             expect(response.body).toMatchObject({
               statusCode: httpStatus.UNAUTHORIZED,
               isOperational: true,
-              message: 'jwt malformed'
+              message: 'No auth token'
             });
           });
       });
