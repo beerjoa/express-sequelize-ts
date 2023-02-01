@@ -1,10 +1,10 @@
-import { Strategy as JwtStrategy, StrategyOptions, VerifiedCallback, VerifyCallback } from 'passport-jwt';
+import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions, VerifiedCallback, VerifyCallback } from 'passport-jwt';
 
 import config from '@/config';
 import { sequelize } from '@/config/database';
 import { User } from '@/models/entities/user.entity';
 
-const cookieExtractJwt = (req: any) => {
+const extractJwtFromCookie = (req: any) => {
   let token = null;
   if (req && req.cookies) {
     token = req.cookies[config.JWT_COOKIE_NAME];
@@ -13,8 +13,13 @@ const cookieExtractJwt = (req: any) => {
 };
 
 const jwtOptions: StrategyOptions = {
-  jwtFromRequest: cookieExtractJwt,
-  secretOrKey: config.JWT_SECRET
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.JWT_ACCESS_TOKEN_SECRET
+};
+
+const jwtRefreshOptions: StrategyOptions = {
+  jwtFromRequest: extractJwtFromCookie,
+  secretOrKey: config.JWT_REFRESH_TOKEN_SECRET
 };
 
 const jwtVerify: VerifyCallback = async (payload: any, done: VerifiedCallback) => {
@@ -32,6 +37,5 @@ const jwtVerify: VerifyCallback = async (payload: any, done: VerifiedCallback) =
   }
 };
 
-const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
-
-export default jwtStrategy;
+export const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
+export const jwtCookieStrategy = new JwtStrategy(jwtRefreshOptions, jwtVerify);
