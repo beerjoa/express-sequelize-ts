@@ -3,11 +3,11 @@ import httpStatus from 'http-status';
 import passport from 'passport';
 import { Model } from 'sequelize-typescript';
 
-import { User } from '@/database/models/user.model';
+import { User } from '@/models/entities/user.entity';
 import ApiError from '@/utils/api-error.util';
 import { http } from '@/utils/handler.util';
 
-type TAuthType = 'local' | 'jwt';
+type TAuthType = 'local' | 'jwt' | 'jwt-refresh';
 type TVerifyCallback = {
   [K in TAuthType]: (req: Request, resolve: any, reject: any) => (err: any, user: Model<User>, info: object) => void;
 };
@@ -17,7 +17,7 @@ const verifyCallback: TVerifyCallback = {
     (req: Request, resolve: any, reject: any) =>
     (err: any, user: Model<User>, info: any): void => {
       if (err || !user) {
-        const error = new ApiError(httpStatus.UNAUTHORIZED, info.message);
+        const error = new ApiError(httpStatus.UNAUTHORIZED, info?.message || err.message);
         reject(error);
       }
 
@@ -28,7 +28,18 @@ const verifyCallback: TVerifyCallback = {
     (req: Request, resolve: any, reject: any) =>
     (err: any, user: Model<User>, info: any): void => {
       if (err || !user) {
-        const error = new ApiError(httpStatus.UNAUTHORIZED, info.message);
+        const error = new ApiError(httpStatus.UNAUTHORIZED, info?.message || err.message);
+        reject(error);
+      }
+
+      req.user = user;
+      resolve();
+    },
+  'jwt-refresh':
+    (req: Request, resolve: any, reject: any) =>
+    (err: any, user: Model<User>, info: any): void => {
+      if (err || !user) {
+        const error = new ApiError(httpStatus.UNAUTHORIZED, info?.message || err.message);
         reject(error);
       }
 

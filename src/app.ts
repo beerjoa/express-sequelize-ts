@@ -1,7 +1,7 @@
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { json } from 'express';
+import express, { json, urlencoded } from 'express';
 import helmet from 'helmet';
 import http from 'http';
 import { createHttpTerminator } from 'http-terminator';
@@ -9,8 +9,8 @@ import https from 'https';
 import passport from 'passport';
 
 import config from '@/config';
-import databaseHandler from '@/config/database';
-import jwtStrategy from '@/config/passport/jwt';
+import databaseHandler from '@/config/database/handler';
+import { jwtCookieStrategy, jwtStrategy } from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
 import { loggerHandler } from '@/middlewares/handler.middleware';
 import IndexRoute from '@/routes/index.route';
@@ -81,6 +81,7 @@ class App implements IApp {
   }
   private initMiddleware(): void {
     this.app.use(json());
+    this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
 
     if (this._env !== 'test') {
@@ -94,6 +95,7 @@ class App implements IApp {
     this.app.use(passport.initialize());
     passport.use('local', localStrategy);
     passport.use('jwt', jwtStrategy);
+    passport.use('jwt-refresh', jwtCookieStrategy);
   }
 }
 

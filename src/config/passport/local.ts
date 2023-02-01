@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import { IStrategyOptions, Strategy as LocalStrategy, VerifyFunction } from 'passport-local';
 
-import { sequelize } from '@/database/models';
-import { User } from '@/database/models/user.model';
+import { sequelize } from '@/config/database';
+import { User } from '@/models/entities/user.entity';
 
 const localOptions: IStrategyOptions = {
   usernameField: 'email',
