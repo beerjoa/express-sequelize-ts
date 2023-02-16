@@ -1,10 +1,11 @@
+import httpStatus from 'http-status';
+import request from 'supertest';
+
 import App from '@/app';
 import config from '@/config';
 import databaseHandler from '@/config/database/handler';
-import CreateUserDto from '@/models/dtos/create-user.dto';
+import CreateUserDto from '@/users/dtos/create-user.dto';
 import logger from '@/utils/logger.util';
-import httpStatus from 'http-status';
-import request from 'supertest';
 
 describe('auth', () => {
   let testApp: Express.Application;

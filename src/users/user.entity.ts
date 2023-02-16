@@ -3,7 +3,7 @@ import { AllowNull, Column, Model, PrimaryKey, Table } from 'sequelize-typescrip
 @Table({
   tableName: 'users'
 })
-export class User extends Model<User> {
+export default class User extends Model<User> {
   @PrimaryKey
   @Column({ autoIncrement: true })
   public id!: number;

@@ -7,6 +7,7 @@ const config = cleanEnv(process.env, {
   NODE_ENV: str({ default: 'development' }),
   PORT: port({ default: 3000 }),
   HOST: str({ default: 'localhost' }),
+  SERVER_URL: str({ default: 'http://localhost:3000' }),
   JWT_ACCESS_TOKEN_SECRET: str({ default: 'secret' }),
   JWT_REFRESH_TOKEN_SECRET: str({ default: 'refresh_secret' }),
   JWT_EXPIRATION: num({ default: 3600000 }),

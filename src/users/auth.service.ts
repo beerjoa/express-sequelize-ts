@@ -5,10 +5,10 @@ import { Model, Repository } from 'sequelize-typescript';
 import { sequelize } from '@/config/database';
 import { tokenHandler, TResultToken } from '@/config/token';
 import { IService } from '@/interfaces/service.interface';
-import CreateUserDto from '@/models/dtos/create-user.dto';
-import SignInUserDto from '@/models/dtos/sign-in-user.dto';
-import UserTokenKeyDto from '@/models/dtos/user-token-key.dto';
-import { User } from '@/models/entities/user.entity';
+import CreateUserDto from '@/users/dtos/create-user.dto';
+import SignInUserDto from '@/users/dtos/sign-in-user.dto';
+import UserTokenKeyDto from '@/users/dtos/user-token-key.dto';
+import User from '@/users/user.entity';
 import ApiError from '@/utils/api-error.util';
 
 type TSignedUser = {

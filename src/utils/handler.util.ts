@@ -1,6 +1,7 @@
+import { Response } from 'express';
+
 import ApiError from '@/utils/api-error.util';
 import logger from '@/utils/logger.util';
-import { Response } from 'express';
 
 // prettier-ignore
 export const http = {

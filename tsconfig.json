@@ -21,6 +21,9 @@
     "skipLibCheck": true,
   },
   "include": [
+    "tests/**/*.ts",
+    "tests/**/**/*.ts",
+    "src/*.ts",
     "src/**/*.ts",
     "src/**/**/*.ts",
   ]

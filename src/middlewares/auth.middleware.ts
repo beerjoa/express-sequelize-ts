@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import passport from 'passport';
 import { Model } from 'sequelize-typescript';
 
-import { User } from '@/models/entities/user.entity';
+import User from '@/users/user.entity';
 import ApiError from '@/utils/api-error.util';
 import { http } from '@/utils/handler.util';
 
