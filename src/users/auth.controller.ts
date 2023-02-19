@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
-import { Body, Get, JsonController, Post, Req, Res, UseBefore } from 'routing-controllers';
+import { Authorized, Body, Get, JsonController, Post, Req, Res, UseBefore } from 'routing-controllers';
 
 import config from '@/config';
 import { IController } from '@/interfaces/controller.interface';
@@ -11,16 +11,18 @@ import CreateUserDto from '@/users/dtos/create-user.dto';
 import SignInUserDto from '@/users/dtos/sign-in-user.dto';
 import ApiError from '@/utils/api-error.util';
 import { http } from '@/utils/handler.util';
+import { Service } from 'typedi';
 
 @JsonController('/auth')
+@Service()
 class AuthController implements IController {
   // prettier-ignore
   constructor(
-    public readonly service: AuthService = new AuthService(),
+    public readonly service: AuthService,
   ) {}
 
   @Get('/who-am-i')
-  @UseBefore(auth('jwt'))
+  @Authorized()
   public whoAmI(@Req() req: Request, @Res() res: Response): Response | undefined {
     try {
       const reqUser = req.user;
@@ -87,7 +89,7 @@ class AuthController implements IController {
   }
 
   @Get('/sign-out')
-  @UseBefore(auth('jwt'))
+  @Authorized()
   public async signOut(@Req() req: Request, @Res() res: Response): Promise<Response> {
     // TODO
     await this.service.signOut();
@@ -98,6 +100,7 @@ class AuthController implements IController {
 
   // public refreshToken = catchAsync(async (req: Request, res: Response): Promise<Response> => {
   @Get('/refresh-token')
+  @Authorized()
   @UseBefore(auth('jwt-refresh'))
   public async refreshToken(@Req() req: Request, @Res() res: Response): Promise<Response | undefined> {
     try {

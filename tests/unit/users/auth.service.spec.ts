@@ -32,8 +32,8 @@ describe('AuthService', () => {
       it('should return created user with token', async () => {
         const createUser = { ...createUserData, id: 0 };
 
-        authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(undefined));
-        authService.userRepository.create = jest.fn().mockReturnValue(createUser);
+        authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(undefined));
+        authService.repository.create = jest.fn().mockReturnValue(createUser);
 
         await expect(authService.signUp(createUserData)).resolves.toMatchObject({
           user: createUser,
@@ -47,7 +47,7 @@ describe('AuthService', () => {
 
     describe('if the user already exists', () => {
       it('should return an error', async () => {
-        authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(createUserData));
+        authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(createUserData));
 
         await expect(authService.signUp(createUserData)).resolves.toMatchObject(
           new ApiError(httpStatus.BAD_REQUEST, 'User already exists')
@@ -62,7 +62,7 @@ describe('AuthService', () => {
 
     describe('if user not found', () => {
       it('should return an error', async () => {
-        authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(null));
+        authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(null));
 
         await expect(authService.signIn(signInUserData)).resolves.toMatchObject(
           new ApiError(httpStatus.NOT_FOUND, 'User Not Found')
@@ -72,7 +72,7 @@ describe('AuthService', () => {
 
     describe('if user password is incorrect', () => {
       it('should return an error', async () => {
-        authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUserData));
+        authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUserData));
         authService.comparePassword = jest.fn().mockReturnValue(false);
 
         await expect(authService.signIn(signInUserData)).resolves.toMatchObject(
@@ -84,7 +84,7 @@ describe('AuthService', () => {
     describe('when signing in with correct credentials', () => {
       it('should return user with token', async () => {
         const signInUser = { ...createUserData, id: 0 };
-        authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUser));
+        authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUser));
         authService.comparePassword = jest.fn().mockReturnValue(true);
 
         await expect(authService.signIn(signInUserData)).resolves.toMatchObject({
@@ -111,7 +111,7 @@ describe('AuthService', () => {
 
     it('should return a refresh token', async () => {
       const signInUser = { ...createUserData, id: 0 };
-      authService.userRepository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUser));
+      authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(signInUser));
       authService.comparePassword = jest.fn().mockReturnValue(true);
 
       await authService.signIn(signInUserData).then(async (res: any) => {

@@ -6,12 +6,14 @@ import IndexService from '@/index.service';
 import { IController } from '@/interfaces/controller.interface';
 import ApiError from '@/utils/api-error.util';
 import { http } from '@/utils/handler.util';
+import { Service } from 'typedi';
 
 @JsonController('')
+@Service()
 class IndexController implements IController {
   // prettier-ignore
   constructor(
-    public service: IndexService = new IndexService()
+    public readonly service: IndexService
   ) {}
   @Get('')
   public async index(@Res() res: Response) {

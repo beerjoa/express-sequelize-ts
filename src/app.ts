@@ -11,18 +11,21 @@ import { createHttpTerminator } from 'http-terminator';
 import https from 'https';
 import { ComponentsObject } from 'openapi3-ts';
 import passport from 'passport';
-import { getMetadataArgsStorage, RoutingControllersOptions, useExpressServer } from 'routing-controllers';
+import { getMetadataArgsStorage, RoutingControllersOptions, useContainer, useExpressServer } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUiExpress from 'swagger-ui-express';
+import { Container } from 'typedi';
 
 import config from '@/config';
 import databaseHandler from '@/config/database/handler';
 import { jwtCookieStrategy, jwtStrategy } from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
+import { authorizationChecker } from '@/middlewares/auth.middleware';
 import { loggerHandler } from '@/middlewares/handler.middleware';
 import logger from '@/utils/logger.util';
 
 type ServerInstanceType = http.Server | https.Server | null;
+type TRoutingControllersOptions = RoutingControllersOptions | unknown;
 
 interface IApp {
   app: express.Application;
@@ -49,6 +52,7 @@ class App implements IApp {
     this._port = config.PORT;
     this._serverUrl = config.SERVER_URL;
 
+    useContainer(Container);
     this.initMiddleware();
     this.initRoutes();
     this.initDatabase();
@@ -79,13 +83,21 @@ class App implements IApp {
     });
   }
   private initRoutes(): void {
-    const routingControllerOptions = {
+    // prettier-ignore
+    const routingControllerOptions: Partial<TRoutingControllersOptions> = {
       routePrefix: '/api',
-      controllers: [__dirname + '/index.controller.ts', __dirname + '/users/*.controller.ts'],
-      middlewares: [__dirname + '/middlewares/*.middleware.ts'],
+      controllers: [
+        __dirname + '/*.controller.ts',
+        __dirname + '/**/*.controller.ts'
+      ],
+      middlewares: [
+        __dirname + '/**/*.middleware.ts'
+      ],
       defaultErrorHandler: false,
-      validation: true
+      validation: true,
+      authorizationChecker
     };
+
     useExpressServer(this.app, routingControllerOptions);
 
     this._InitSwagger(routingControllerOptions);
