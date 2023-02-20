@@ -12,5 +12,5 @@ services:
     volumes:
       - ./.env.test:/data/app/.env.test
       - ./src:/data/app/src
-    command: yarn test:e2e
+    command: yarn test:integration
     tty: true

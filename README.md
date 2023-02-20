@@ -24,10 +24,10 @@ Made with [Express](https://expressjs.com/en/4x/api.html), [TypeScript](https://
 #### Back-end app features
 
 - 🚫 JWT authentication for secure access to the API
-- 🎢 Layered architecture. (Controller, Service, Repository, Model)
+- 🎢 Layered architecture. (Controller, Service(Repository), Model)
 - ♻️ Data Transport Object (DTO) for data validation
 - 📦 Dependency injection for better code organization
-- ~~_(WIP) API documentation using Swagger_~~
+- 📝 Swagger for API documentation
 
 ## Requirements
 
@@ -65,7 +65,7 @@ then, you can run locally in development and test mode:
 ```bash
 ## run locally in development and test mode
 #### using yarn
-$ yarn dev | test:e2e | test:unit:all | test:unit {path}
+$ yarn dev | test:integration | test:unit:all | test:unit {path}
 
 #### using Docker
 $ yarn docker:dev | docker:test
@@ -96,7 +96,7 @@ $ yarn docker:prod
 
 ## What's next?
 
-- [ ] Add swagger
+- [x] ~~Add swagger~~
 - [ ] Handle scheduled tasks using bull
 
 ## License
