@@ -11,6 +11,7 @@ import { createHttpTerminator } from 'http-terminator';
 import https from 'https';
 import { ComponentsObject } from 'openapi3-ts';
 import passport from 'passport';
+import path from 'path';
 import { getMetadataArgsStorage, RoutingControllersOptions, useContainer, useExpressServer } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUiExpress from 'swagger-ui-express';
@@ -83,16 +84,10 @@ class App implements IApp {
     });
   }
   private initRoutes(): void {
-    // prettier-ignore
     const routingControllerOptions: Partial<TRoutingControllersOptions> = {
       routePrefix: '/api',
-      controllers: [
-        __dirname + '/*.controller.ts',
-        __dirname + '/**/*.controller.ts'
-      ],
-      middlewares: [
-        __dirname + '/**/*.middleware.ts'
-      ],
+      controllers: [path.join(__dirname, '/*.controller.ts'), path.join(__dirname, '/**/*.controller.ts')],
+      middlewares: [path.join(__dirname, '/middleware/*.ts')],
       defaultErrorHandler: false,
       validation: true,
       authorizationChecker

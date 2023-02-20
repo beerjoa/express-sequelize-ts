@@ -12,6 +12,7 @@ const config = cleanEnv(process.env, {
   JWT_REFRESH_TOKEN_SECRET: str({ default: 'refresh_secret' }),
   JWT_EXPIRATION: num({ default: 3600000 }),
   JWT_COOKIE_NAME: str({ default: 'Authorization' }),
+  JWT_AUTH_TYPE: str({ default: 'Basic' }),
   REDIS_HOST: str({ default: 'redis' }),
   REDIS_PORT: port({ default: 6379 }),
   REDIS_PASSWORD: str({ default: '' })

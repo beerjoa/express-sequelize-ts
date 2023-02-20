@@ -1,16 +1,14 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { Model, Repository } from 'sequelize-typescript';
+import { Service } from 'typedi';
 
 import { sequelize } from '@/config/database';
 import { tokenHandler, TResultToken } from '@/config/token';
 import { IService } from '@/interfaces/service.interface';
-import CreateUserDto from '@/users/dtos/create-user.dto';
-import SignInUserDto from '@/users/dtos/sign-in-user.dto';
-import UserTokenKeyDto from '@/users/dtos/user-token-key.dto';
+import { CreateUserDto, SignInUserDto, UserTokenKeyDto } from '@/users/dtos/user.dto';
 import User from '@/users/user.entity';
 import ApiError from '@/utils/api-error.util';
-import { Service } from 'typedi';
 
 type TSignedUser = {
   user: Model<User>;

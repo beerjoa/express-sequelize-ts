@@ -4,8 +4,7 @@ import httpStatus from 'http-status';
 import config from '@/config';
 import AuthController from '@/users/auth.controller';
 import AuthService from '@/users/auth.service';
-import CreateUserDto from '@/users/dtos/create-user.dto';
-import SignInUserDto from '@/users/dtos/sign-in-user.dto';
+import { CreateUserDto, SignInUserDto } from '@/users/dtos/user.dto';
 import ApiError from '@/utils/api-error.util';
 
 describe('AuthController', () => {
@@ -55,7 +54,8 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.whoAmI(req, res);
+      const mockToken = 'mock_token';
+      await controller.whoAmI(req, res, mockToken);
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
@@ -93,7 +93,7 @@ describe('AuthController', () => {
       expect(res.status).toBeCalledWith(httpStatus.CREATED);
       expect(res.json).toBeCalledWith(
         expect.objectContaining({
-          access_token: expect.any(String),
+          accessToken: expect.any(String),
           user: expect.objectContaining({
             ...signUpInput
           })
@@ -167,7 +167,7 @@ describe('AuthController', () => {
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
-        access_token: expect.any(String),
+        accessToken: expect.any(String),
         user: expect.objectContaining({
           ...signInInput
         })
@@ -277,7 +277,7 @@ describe('AuthController', () => {
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
-        access_token: expect.any(String),
+        accessToken: expect.any(String),
         message: 'Tokens refreshed successfully'
       });
       expect(res.cookie).toBeCalledWith(

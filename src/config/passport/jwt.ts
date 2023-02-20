@@ -13,7 +13,7 @@ const extractJwtFromCookie = (req: any) => {
 };
 
 const jwtOptions: StrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme(config.JWT_AUTH_TYPE),
   secretOrKey: config.JWT_ACCESS_TOKEN_SECRET
 };
 
