@@ -2,10 +2,9 @@ import { getMockReq, getMockRes } from '@jest-mock/express';
 import httpStatus from 'http-status';
 
 import config from '@/config';
-import AuthController from '@/controllers/auth.controller';
-import CreateUserDto from '@/models/dtos/create-user.dto';
-import SignInUserDto from '@/models/dtos/sign-in-user.dto';
-import AuthService from '@/services/auth.service';
+import AuthController from '@/users/auth.controller';
+import AuthService from '@/users/auth.service';
+import { CreateUserDto, SignInUserDto } from '@/users/dtos/user.dto';
 import ApiError from '@/utils/api-error.util';
 
 describe('AuthController', () => {
@@ -55,7 +54,8 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.whoAmI(req, res, next);
+      const mockToken = 'mock_token';
+      await controller.whoAmI(req, res, mockToken);
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
@@ -88,12 +88,12 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.signUp(req, res, next);
+      await controller.signUp(signedUpUser, res);
 
       expect(res.status).toBeCalledWith(httpStatus.CREATED);
       expect(res.json).toBeCalledWith(
         expect.objectContaining({
-          access_token: expect.any(String),
+          accessToken: expect.any(String),
           user: expect.objectContaining({
             ...signUpInput
           })
@@ -127,7 +127,7 @@ describe('AuthController', () => {
 
         service.signUp = jest.fn().mockResolvedValue(apiError);
 
-        await controller.signUp(req, res, next);
+        await controller.signUp(signUpInput, res);
 
         expect(res.status).toBeCalledWith(httpStatus.BAD_REQUEST);
         expect(res.json).toBeCalledWith(
@@ -163,11 +163,11 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.signIn(req, res, next);
+      await controller.signIn(signUpInput, res);
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
-        access_token: expect.any(String),
+        accessToken: expect.any(String),
         user: expect.objectContaining({
           ...signInInput
         })
@@ -201,7 +201,7 @@ describe('AuthController', () => {
         const apiError = new ApiError(httpStatus.BAD_REQUEST, 'Password is incorrect');
         service.signIn = jest.fn().mockResolvedValue(apiError);
 
-        await controller.signIn(req, res, next);
+        await controller.signIn(signUpInput, res);
 
         expect(res.status).toBeCalledWith(httpStatus.BAD_REQUEST);
         expect(res.json).toBeCalledWith(
@@ -216,7 +216,7 @@ describe('AuthController', () => {
         const apiError = new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
         service.signIn = jest.fn().mockResolvedValue(apiError);
 
-        await controller.signIn(req, res, next);
+        await controller.signIn(signUpInput, res);
 
         expect(res.status).toBeCalledWith(httpStatus.NOT_FOUND);
         expect(res.json).toBeCalledWith(
@@ -242,7 +242,7 @@ describe('AuthController', () => {
         clearCookie: jest.fn().mockReturnThis()
       });
 
-      await controller.signOut(req, res, next);
+      await controller.signOut(req, res);
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
@@ -273,11 +273,11 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.refreshToken(req, res, next);
+      await controller.refreshToken(req, res);
 
       expect(res.status).toBeCalledWith(httpStatus.OK);
       expect(res.json).toBeCalledWith({
-        access_token: expect.any(String),
+        accessToken: expect.any(String),
         message: 'Tokens refreshed successfully'
       });
       expect(res.cookie).toBeCalledWith(
@@ -309,7 +309,7 @@ describe('AuthController', () => {
         const apiError = new ApiError(httpStatus.UNAUTHORIZED, 'invalid token');
         service.refreshToken = jest.fn().mockResolvedValue(apiError);
 
-        await controller.refreshToken(req, res, next);
+        await controller.refreshToken(req, res);
 
         expect(res.status).toBeCalledWith(httpStatus.UNAUTHORIZED);
         expect(res.json).toBeCalledWith(

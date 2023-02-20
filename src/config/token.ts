@@ -1,7 +1,7 @@
 import jwt, { JwtPayload, SignOptions, VerifyOptions } from 'jsonwebtoken';
 
 import config from '@/config';
-import UserTokenKeyDto from '@/models/dtos/user-token-key.dto';
+import { UserTokenKeyDto } from '@/users/dtos/user.dto';
 
 export type TResultToken = {
   accessToken: string;

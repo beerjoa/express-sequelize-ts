@@ -1,1 +1,4 @@
-export interface IService {}
+import { Model, Repository } from 'sequelize-typescript';
+export interface IService {
+  repository: Repository<Model>;
+}

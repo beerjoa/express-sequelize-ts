@@ -1,9 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 import { Sequelize } from 'sequelize-typescript';
 
 import config from '@/config';
-import { User } from '@/models/entities/user.entity';
 import logger from '@/utils/logger.util';
 
 type DatabaseInstanceType = Sequelize | any;
@@ -18,14 +17,17 @@ class SequelizeSQLiteHandler implements IDatabaseHandler {
   private _sequelize: DatabaseInstanceType;
   private _env: string;
   private _dbPath: string;
+  private _modelPath: string;
+
   constructor() {
     this._env = config.NODE_ENV;
-    this._dbPath = path.resolve(__dirname, `../../${this._env}.sqlite`);
+    this._dbPath = path.join(process.cwd(), `${this._env}.sqlite`);
+    this._modelPath = path.join(process.cwd(), '/src/**/*.entity.ts');
 
     this._sequelize = new Sequelize({
       dialect: 'sqlite',
       storage: this._dbPath,
-      models: [User],
+      models: [this._modelPath],
       repositoryMode: true,
       define: {
         charset: 'utf8mb4',

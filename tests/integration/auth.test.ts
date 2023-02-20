@@ -1,10 +1,11 @@
+import httpStatus from 'http-status';
+import request from 'supertest';
+
 import App from '@/app';
 import config from '@/config';
 import databaseHandler from '@/config/database/handler';
-import CreateUserDto from '@/models/dtos/create-user.dto';
+import { CreateUserDto } from '@/users/dtos/user.dto';
 import logger from '@/utils/logger.util';
-import httpStatus from 'http-status';
-import request from 'supertest';
 
 describe('auth', () => {
   let testApp: Express.Application;
@@ -39,7 +40,7 @@ describe('auth', () => {
         .expect(httpStatus.CREATED)
         .then((response) => {
           expect(response.body).toMatchObject({
-            access_token: expect.any(String),
+            accessToken: expect.any(String),
             user: {
               id: expect.any(Number),
               email: createUserData.email,
@@ -93,7 +94,7 @@ describe('auth', () => {
         .expect(httpStatus.OK)
         .then((response) => {
           expect(response.body).toMatchObject({
-            access_token: expect.any(String),
+            accessToken: expect.any(String),
             user: {
               id: expect.any(Number),
               email: createUserData.email,
@@ -162,12 +163,12 @@ describe('auth', () => {
         .expect('Content-Type', /json/)
         .expect(httpStatus.OK)
         .then((response) => {
-          token = response.body?.access_token;
+          token = response.body?.accessToken;
         });
 
       await request(testApp)
         .get('/api/auth/sign-out')
-        .set('Authorization', `bearer ${token}`)
+        .set('Authorization', `${config.JWT_AUTH_TYPE} ${token}`)
         .expect('Content-Type', /json/)
         .expect(httpStatus.OK)
         .then((response) => {

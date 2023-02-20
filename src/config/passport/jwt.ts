@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions, VerifiedCallback,
 
 import config from '@/config';
 import { sequelize } from '@/config/database';
-import { User } from '@/models/entities/user.entity';
+import User from '@/users/user.entity';
 
 const extractJwtFromCookie = (req: any) => {
   let token = null;
@@ -13,7 +13,7 @@ const extractJwtFromCookie = (req: any) => {
 };
 
 const jwtOptions: StrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme(config.JWT_AUTH_TYPE),
   secretOrKey: config.JWT_ACCESS_TOKEN_SECRET
 };
 

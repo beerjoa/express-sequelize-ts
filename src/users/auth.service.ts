@@ -1,14 +1,13 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { Model, Repository } from 'sequelize-typescript';
+import { Service } from 'typedi';
 
 import { sequelize } from '@/config/database';
 import { tokenHandler, TResultToken } from '@/config/token';
 import { IService } from '@/interfaces/service.interface';
-import CreateUserDto from '@/models/dtos/create-user.dto';
-import SignInUserDto from '@/models/dtos/sign-in-user.dto';
-import UserTokenKeyDto from '@/models/dtos/user-token-key.dto';
-import { User } from '@/models/entities/user.entity';
+import { CreateUserDto, SignInUserDto, UserTokenKeyDto } from '@/users/dtos/user.dto';
+import User from '@/users/user.entity';
 import ApiError from '@/utils/api-error.util';
 
 type TSignedUser = {
@@ -16,29 +15,29 @@ type TSignedUser = {
   token: TResultToken;
 };
 
+@Service()
 class AuthService implements IService {
   // prettier-ignore
   constructor(
-    public readonly userRepository: Repository<Model<User>> = sequelize.getRepository(User),
-    
+    public readonly repository: Repository<Model<User>> = sequelize.getRepository(User),    
   ) {}
 
   public async signUp(userInput: CreateUserDto): Promise<TSignedUser | ApiError> {
-    const findUser = await this.userRepository.findOne({ where: { email: userInput.email } });
+    const findUser = await this.repository.findOne({ where: { email: userInput.email } });
 
     if (findUser) {
       return new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
     }
 
     const hashedPassword = await bcrypt.hash(userInput.password, 10);
-    const createUser = await this.userRepository.create({ ...userInput, password: hashedPassword } as User);
+    const createUser = await this.repository.create({ ...userInput, password: hashedPassword } as User);
     const createdTokens = this.__createToken(createUser as User);
 
     return { user: createUser, token: createdTokens };
   }
 
   public async signIn(userInput: SignInUserDto): Promise<TSignedUser | ApiError> {
-    const findUser = (await this.userRepository.findOne({ where: { email: userInput.email } })) as User;
+    const findUser = (await this.repository.findOne({ where: { email: userInput.email } })) as User;
 
     if (!findUser) {
       return new ApiError(httpStatus.NOT_FOUND, 'User Not Found');

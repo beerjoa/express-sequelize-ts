@@ -3,10 +3,16 @@ import httpStatus from 'http-status';
 import passport from 'passport';
 import { Model } from 'sequelize-typescript';
 
-import { User } from '@/models/entities/user.entity';
+import User from '@/users/user.entity';
 import ApiError from '@/utils/api-error.util';
 import { http } from '@/utils/handler.util';
+import { Action } from 'routing-controllers';
 
+type TAction = Action & {
+  request: Request;
+  response: Response;
+  next: NextFunction;
+};
 type TAuthType = 'local' | 'jwt' | 'jwt-refresh';
 type TVerifyCallback = {
   [K in TAuthType]: (req: Request, resolve: any, reject: any) => (err: any, user: Model<User>, info: object) => void;
@@ -65,5 +71,6 @@ const auth =
         return http.sendErrorResponse(res, err.statusCode, err);
       });
   };
+export const authorizationChecker = (action: TAction) => auth('jwt')(action.request, action.response, action.next);
 
 export default auth;

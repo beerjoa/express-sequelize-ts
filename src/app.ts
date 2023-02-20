@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+
+import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -6,17 +9,24 @@ import helmet from 'helmet';
 import http from 'http';
 import { createHttpTerminator } from 'http-terminator';
 import https from 'https';
+import { ComponentsObject } from 'openapi3-ts';
 import passport from 'passport';
+import path from 'path';
+import { getMetadataArgsStorage, RoutingControllersOptions, useContainer, useExpressServer } from 'routing-controllers';
+import { routingControllersToSpec } from 'routing-controllers-openapi';
+import swaggerUiExpress from 'swagger-ui-express';
+import { Container } from 'typedi';
 
 import config from '@/config';
 import databaseHandler from '@/config/database/handler';
 import { jwtCookieStrategy, jwtStrategy } from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
+import { authorizationChecker } from '@/middlewares/auth.middleware';
 import { loggerHandler } from '@/middlewares/handler.middleware';
-import IndexRoute from '@/routes/index.route';
 import logger from '@/utils/logger.util';
 
 type ServerInstanceType = http.Server | https.Server | null;
+type TRoutingControllersOptions = RoutingControllersOptions | unknown;
 
 interface IApp {
   app: express.Application;
@@ -33,6 +43,7 @@ class App implements IApp {
   private _env: string;
   private _host: string;
   private _port: number;
+  private _serverUrl: string;
 
   constructor() {
     this._app = express();
@@ -40,6 +51,9 @@ class App implements IApp {
     this._env = config.NODE_ENV;
     this._host = config.HOST;
     this._port = config.PORT;
+    this._serverUrl = config.SERVER_URL;
+
+    useContainer(Container);
     this.initMiddleware();
     this.initRoutes();
     this.initDatabase();
@@ -70,8 +84,18 @@ class App implements IApp {
     });
   }
   private initRoutes(): void {
-    const route = new IndexRoute();
-    this.app.use('/api', route.router);
+    const routingControllerOptions: Partial<TRoutingControllersOptions> = {
+      routePrefix: '/api',
+      controllers: [path.join(__dirname, '/*.controller.ts'), path.join(__dirname, '/**/*.controller.ts')],
+      middlewares: [path.join(__dirname, '/middleware/*.ts')],
+      defaultErrorHandler: false,
+      validation: true,
+      authorizationChecker
+    };
+
+    useExpressServer(this.app, routingControllerOptions);
+
+    this._InitSwagger(routingControllerOptions);
   }
 
   private async initDatabase(): Promise<void> {
@@ -79,6 +103,30 @@ class App implements IApp {
       logger.info(`\n🟩 Database connected ✅`);
     });
   }
+  private async _InitSwagger(routingControllerOptions: Partial<RoutingControllersOptions>): Promise<void> {
+    const storage = getMetadataArgsStorage();
+    const schemas = validationMetadatasToSchemas({
+      refPointerPrefix: '#/components/schemas/'
+    });
+
+    const additionalProperties = {
+      info: {
+        title: 'API Documentation',
+        description: 'API Documentation',
+        version: '1.0.0'
+      },
+      servers: [
+        {
+          url: this._serverUrl
+        }
+      ],
+      components: { schemas } as ComponentsObject
+    };
+    const spec = routingControllersToSpec(storage, routingControllerOptions, additionalProperties);
+
+    this.app.use('/api-docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
+  }
+
   private initMiddleware(): void {
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
