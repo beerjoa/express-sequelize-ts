@@ -45,7 +45,6 @@ describe('auth', () => {
               id: expect.any(Number),
               email: createUserData.email,
               name: createUserData.name,
-              password: expect.any(String),
               updatedAt: expect.any(String),
               createdAt: expect.any(String)
             }
@@ -59,12 +58,11 @@ describe('auth', () => {
           .post('/api/auth/sign-up')
           .send({ wrong_input: 'wrong_input' })
           .expect('Content-Type', /json/)
-          .expect(httpStatus.UNPROCESSABLE_ENTITY)
+          .expect(httpStatus.BAD_REQUEST)
           .then((response) => {
             expect(response.body).toMatchObject({
-              statusCode: httpStatus.UNPROCESSABLE_ENTITY,
-              isOperational: true,
-              message: expect.stringContaining('An instance of CreateUserDto has failed the validation:')
+              httpCode: httpStatus.BAD_REQUEST,
+              message: expect.stringContaining(`Invalid body, check 'errors' property for more info.`)
             });
           });
       });
@@ -76,8 +74,7 @@ describe('auth', () => {
           .expect(httpStatus.BAD_REQUEST)
           .then((response) => {
             expect(response.body).toMatchObject({
-              statusCode: httpStatus.BAD_REQUEST,
-              isOperational: true,
+              httpCode: httpStatus.BAD_REQUEST,
               message: 'User already exists'
             });
           });
@@ -99,7 +96,6 @@ describe('auth', () => {
               id: expect.any(Number),
               email: createUserData.email,
               name: createUserData.name,
-              password: expect.any(String),
               updatedAt: expect.any(String),
               createdAt: expect.any(String)
             }
@@ -113,25 +109,23 @@ describe('auth', () => {
           .post('/api/auth/sign-in')
           .send({ wrong_input: 'wrong_input' })
           .expect('Content-Type', /json/)
-          .expect(httpStatus.UNPROCESSABLE_ENTITY)
+          .expect(httpStatus.UNAUTHORIZED)
           .then((response) => {
             expect(response.body).toMatchObject({
-              statusCode: httpStatus.UNPROCESSABLE_ENTITY,
-              isOperational: true,
-              message: expect.stringContaining('An instance of SignInUserDto has failed the validation:')
+              httpCode: httpStatus.UNAUTHORIZED,
+              message: expect.stringContaining('Missing credentials')
             });
           });
       });
       it('when email is not found', async () => {
         await request(testApp)
           .post('/api/auth/sign-in')
-          .send({ email: 'wrong@email.com', password: 'wrong-password' })
+          .send({ email: 'wrong@email.com', password: 'wrong_password' })
           .expect('Content-Type', /json/)
           .expect(httpStatus.UNAUTHORIZED)
           .then((response) => {
             expect(response.body).toMatchObject({
-              statusCode: httpStatus.UNAUTHORIZED,
-              isOperational: true,
+              httpCode: httpStatus.UNAUTHORIZED,
               message: 'Incorrect email or password.'
             });
           });
@@ -144,8 +138,7 @@ describe('auth', () => {
           .expect(httpStatus.UNAUTHORIZED)
           .then((response) => {
             expect(response.body).toMatchObject({
-              statusCode: httpStatus.UNAUTHORIZED,
-              isOperational: true,
+              httpCode: httpStatus.UNAUTHORIZED,
               message: 'Incorrect email or password.'
             });
           });
@@ -178,7 +171,7 @@ describe('auth', () => {
         });
     });
 
-    describe('should return api error', () => {
+    describe('should return http error', () => {
       it('when token is invalid', async () => {
         await request(testApp)
           .get('/api/auth/sign-out')
@@ -187,9 +180,8 @@ describe('auth', () => {
           .expect(httpStatus.UNAUTHORIZED)
           .then((response) => {
             expect(response.body).toMatchObject({
-              statusCode: httpStatus.UNAUTHORIZED,
-              isOperational: true,
-              message: 'No auth token'
+              httpCode: httpStatus.UNAUTHORIZED,
+              message: 'Unauthorized'
             });
           });
       });
