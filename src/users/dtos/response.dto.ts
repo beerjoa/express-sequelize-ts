@@ -1,30 +1,8 @@
 import { Expose, Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsObject, IsString, ValidateNested } from 'class-validator';
 import { JSONSchema } from 'class-validator-jsonschema';
 
 import UserDto from '@/users/dtos/user.dto';
-
-@JSONSchema({
-  description: 'User Error Response dto',
-  example: {
-    message: 'User Error Response',
-    isOperational: true,
-    statusCode: 400
-  }
-})
-export class UserErrorResponseDto {
-  @Expose()
-  @IsString()
-  public message!: string;
-
-  @Expose()
-  @IsBoolean()
-  public isOperational!: boolean;
-
-  @Expose()
-  @IsNumber()
-  public statusCode!: number;
-}
 
 @JSONSchema({
   description: 'User Response dto',

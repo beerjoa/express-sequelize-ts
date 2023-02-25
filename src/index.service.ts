@@ -1,8 +1,9 @@
-import { IService } from '@/interfaces/service.interface';
 import { Model, Repository } from 'sequelize-typescript';
 import { Service } from 'typedi';
-import { sequelize } from './config/database';
-import User from './users/user.entity';
+
+import { sequelize } from '@/config/database';
+import { IService } from '@/interfaces/service.interface';
+import User from '@/users/user.entity';
 
 @Service()
 class IndexService implements IService {

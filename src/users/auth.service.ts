@@ -1,17 +1,17 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
+import { BadRequestError, HttpError } from 'routing-controllers';
 import { Model, Repository } from 'sequelize-typescript';
 import { Service } from 'typedi';
 
 import { sequelize } from '@/config/database';
 import { tokenHandler, TResultToken } from '@/config/token';
 import { IService } from '@/interfaces/service.interface';
-import { CreateUserDto, SignInUserDto, UserTokenKeyDto } from '@/users/dtos/user.dto';
+import UserDto, { CreateUserDto, SignInUserDto, UserTokenKeyDto } from '@/users/dtos/user.dto';
 import User from '@/users/user.entity';
-import ApiError from '@/utils/api-error.util';
 
 type TSignedUser = {
-  user: Model<User>;
+  user: UserDto;
   token: TResultToken;
 };
 
@@ -22,37 +22,39 @@ class AuthService implements IService {
     public readonly repository: Repository<Model<User>> = sequelize.getRepository(User),    
   ) {}
 
-  public async signUp(userInput: CreateUserDto): Promise<TSignedUser | ApiError> {
+  public async signUp(userInput: CreateUserDto): Promise<TSignedUser | HttpError> {
     const findUser = await this.repository.findOne({ where: { email: userInput.email } });
 
     if (findUser) {
-      return new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
+      return new HttpError(httpStatus.BAD_REQUEST, 'User already exists');
     }
 
     const hashedPassword = await bcrypt.hash(userInput.password, 10);
-    const createUser = await this.repository.create({ ...userInput, password: hashedPassword } as User);
-    const createdTokens = this.__createToken(createUser as User);
+    userInput.password = hashedPassword;
+    const createUser = (await this.repository.create(userInput as User)) as User;
 
-    return { user: createUser, token: createdTokens };
+    const createdTokens = this.__createToken(createUser);
+
+    return { user: createUser as UserDto, token: createdTokens };
   }
 
-  public async signIn(userInput: SignInUserDto): Promise<TSignedUser | ApiError> {
+  public async signIn(userInput: SignInUserDto): Promise<TSignedUser | HttpError> {
     const findUser = (await this.repository.findOne({ where: { email: userInput.email } })) as User;
 
     if (!findUser) {
-      return new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
+      return new BadRequestError('Incorrect email or password.');
     }
 
     const hashedPassword = findUser.password;
-    const isPasswordMatching = this.comparePassword(userInput.password, hashedPassword);
+    const isPasswordMatching = await this.comparePassword(userInput.password, hashedPassword);
 
     if (!isPasswordMatching) {
-      return new ApiError(httpStatus.BAD_REQUEST, 'Incorrect password');
+      return new BadRequestError('Incorrect email or password.');
     }
 
     const createdTokens = this.__createToken(findUser);
 
-    return { user: findUser, token: createdTokens };
+    return { user: findUser as UserDto, token: createdTokens };
   }
 
   public async signOut(): Promise<void> {
@@ -61,11 +63,11 @@ class AuthService implements IService {
     // ex) update logout date in db
   }
 
-  public async refreshToken(refreshToken: string): Promise<Pick<TSignedUser, 'token'> | ApiError> {
+  public async refreshToken(refreshToken: string): Promise<Pick<TSignedUser, 'token'> | HttpError> {
     const refreshedToken = this.__refreshToken(refreshToken);
 
     if (!refreshedToken) {
-      return new ApiError(httpStatus.UNAUTHORIZED, 'invalid token');
+      return new HttpError(httpStatus.UNAUTHORIZED, 'invalid token');
     }
 
     return { token: refreshedToken };

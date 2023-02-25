@@ -1,11 +1,13 @@
 import { getMockReq, getMockRes } from '@jest-mock/express';
 import httpStatus from 'http-status';
+import { HttpError } from 'routing-controllers';
 
 import config from '@/config';
+import { TResultToken } from '@/config/token';
 import AuthController from '@/users/auth.controller';
 import AuthService from '@/users/auth.service';
-import { CreateUserDto, SignInUserDto } from '@/users/dtos/user.dto';
-import ApiError from '@/utils/api-error.util';
+import { UserResponseDto } from '@/users/dtos/response.dto';
+import UserDto, { CreateUserDto, SignInUserDto } from '@/users/dtos/user.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -16,22 +18,23 @@ describe('AuthController', () => {
     controller = new AuthController(service);
   });
 
-  const signInInput: SignInUserDto = {
-    email: 'tester@email.com',
-    password: 'retset'
-  };
-  const signedInUser = {
-    ...signInInput,
-    id: expect.any(Number),
-    createdAt: expect.any(Date),
-    updatedAt: expect.any(Date)
-  };
   const signUpInput: CreateUserDto = {
     name: 'tester',
     email: 'tester@email.com',
     password: 'retset'
   };
-  const signedUpUser = {
+  const signedUpUser: UserDto = {
+    ...signUpInput,
+    id: expect.any(Number),
+    createdAt: expect.any(Date),
+    updatedAt: expect.any(Date)
+  };
+
+  const signInInput: SignInUserDto = {
+    email: 'tester@email.com',
+    password: 'retset'
+  };
+  const signedInUser: UserDto = {
     ...signUpInput,
     id: expect.any(Number),
     createdAt: expect.any(Date),
@@ -45,7 +48,7 @@ describe('AuthController', () => {
 
     it('should return 200 & valid response', async () => {
       const req = getMockReq({
-        user: signInInput
+        user: signedInUser as UserDto
       });
 
       const { res, next, clearMockRes } = getMockRes({
@@ -54,13 +57,16 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      const mockToken = 'mock_token';
-      await controller.whoAmI(req, res, mockToken);
+      const mockTokenWithAuthType = `${config.JWT_AUTH_TYPE} mock_token`;
+      const result = await controller.whoAmI(req, mockTokenWithAuthType);
+      const mockToken = mockTokenWithAuthType.split(' ')[1];
 
-      expect(res.status).toBeCalledWith(httpStatus.OK);
-      expect(res.json).toBeCalledWith({
-        user: expect.objectContaining(signInInput)
+      expect(result).toBeInstanceOf(UserResponseDto);
+      expect(result).toMatchObject({
+        user: signedInUser,
+        accessToken: mockToken
       });
+
       clearMockRes();
     });
   });
@@ -72,11 +78,11 @@ describe('AuthController', () => {
 
     it('should return 201 & valid response', async () => {
       service.signUp = jest.fn().mockResolvedValue({
-        user: signedUpUser,
+        user: signedUpUser as UserDto,
         token: {
           accessToken: expect.any(String),
           refreshToken: expect.any(String)
-        }
+        } as TResultToken
       });
 
       const req = getMockReq({
@@ -88,17 +94,13 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.signUp(signedUpUser, res);
+      const result = await controller.signUp(signedUpUser, res);
 
-      expect(res.status).toBeCalledWith(httpStatus.CREATED);
-      expect(res.json).toBeCalledWith(
-        expect.objectContaining({
-          accessToken: expect.any(String),
-          user: expect.objectContaining({
-            ...signUpInput
-          })
-        })
-      );
+      expect(result).toBeInstanceOf(UserResponseDto);
+      expect(result).toMatchObject({
+        user: signedUpUser,
+        accessToken: expect.any(String)
+      });
       expect(res.cookie).toBeCalledWith(
         config.JWT_COOKIE_NAME,
         expect.any(String),
@@ -111,31 +113,26 @@ describe('AuthController', () => {
       clearMockRes();
     });
 
-    describe('should return api error', () => {
+    describe('should return http error', () => {
       const req = getMockReq({
         body: signUpInput
       });
-      const { res, next, clearMockRes } = getMockRes({
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnThis()
-      });
+      const { res, next, clearMockRes } = getMockRes();
       beforeEach(() => {
         clearMockRes();
       });
       it('should return 400 if user already exists', async () => {
-        const apiError = new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
+        const httpError = new HttpError(httpStatus.BAD_REQUEST, 'User already exists');
 
-        service.signUp = jest.fn().mockResolvedValue(apiError);
+        service.signUp = jest.fn().mockResolvedValue(httpError);
 
-        await controller.signUp(signUpInput, res);
+        const result = await controller.signUp(signUpInput, res);
 
-        expect(res.status).toBeCalledWith(httpStatus.BAD_REQUEST);
-        expect(res.json).toBeCalledWith(
-          expect.objectContaining({
-            statusCode: httpStatus.BAD_REQUEST,
-            message: 'User already exists'
-          })
-        );
+        expect(result).toBeInstanceOf(HttpError);
+        expect(result).toMatchObject({
+          httpCode: httpStatus.BAD_REQUEST,
+          message: 'User already exists'
+        });
       });
     });
   });
@@ -147,30 +144,25 @@ describe('AuthController', () => {
 
     it('should return 200 & valid response', async () => {
       service.signIn = jest.fn().mockResolvedValue({
-        user: signedInUser,
+        user: signedInUser as UserDto,
         token: {
           accessToken: expect.any(String),
           refreshToken: expect.any(String)
-        }
+        } as TResultToken
       });
 
-      const req = getMockReq({
-        body: signInInput
-      });
       const { res, next, clearMockRes } = getMockRes({
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis(),
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.signIn(signUpInput, res);
+      const result = await controller.signIn(signInInput, res);
 
-      expect(res.status).toBeCalledWith(httpStatus.OK);
-      expect(res.json).toBeCalledWith({
-        accessToken: expect.any(String),
-        user: expect.objectContaining({
-          ...signInInput
-        })
+      expect(result).toBeInstanceOf(UserResponseDto);
+      expect(result).toMatchObject({
+        user: signedInUser,
+        accessToken: expect.any(String)
       });
       expect(res.cookie).toBeCalledWith(
         config.JWT_COOKIE_NAME,
@@ -184,10 +176,7 @@ describe('AuthController', () => {
       clearMockRes();
     });
 
-    describe('should return api error', () => {
-      const req = getMockReq({
-        body: signInInput
-      });
+    describe('should return http error', () => {
       const { res, next, clearMockRes } = getMockRes({
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockReturnThis()
@@ -198,33 +187,29 @@ describe('AuthController', () => {
       });
 
       it('should return 400 if password is incorrect', async () => {
-        const apiError = new ApiError(httpStatus.BAD_REQUEST, 'Password is incorrect');
-        service.signIn = jest.fn().mockResolvedValue(apiError);
+        const httpError = new HttpError(httpStatus.BAD_REQUEST, 'Password is incorrect');
+        service.signIn = jest.fn().mockResolvedValue(httpError);
 
-        await controller.signIn(signUpInput, res);
+        const result = await controller.signIn(signUpInput, res);
 
-        expect(res.status).toBeCalledWith(httpStatus.BAD_REQUEST);
-        expect(res.json).toBeCalledWith(
-          expect.objectContaining({
-            statusCode: httpStatus.BAD_REQUEST,
-            message: 'Password is incorrect'
-          })
-        );
+        expect(result).toBeInstanceOf(HttpError);
+        expect(result).toMatchObject({
+          httpCode: httpStatus.BAD_REQUEST,
+          message: 'Password is incorrect'
+        });
       });
 
       it('should return 404 if user does not exist', async () => {
-        const apiError = new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
-        service.signIn = jest.fn().mockResolvedValue(apiError);
+        const httpError = new HttpError(httpStatus.NOT_FOUND, 'Incorrect email or password.');
+        service.signIn = jest.fn().mockResolvedValue(httpError);
 
-        await controller.signIn(signUpInput, res);
+        const result = await controller.signIn(signUpInput, res);
 
-        expect(res.status).toBeCalledWith(httpStatus.NOT_FOUND);
-        expect(res.json).toBeCalledWith(
-          expect.objectContaining({
-            statusCode: httpStatus.NOT_FOUND,
-            message: 'User Not Found'
-          })
-        );
+        expect(result).toBeInstanceOf(HttpError);
+        expect(result).toMatchObject({
+          httpCode: httpStatus.NOT_FOUND,
+          message: 'Incorrect email or password.'
+        });
       });
     });
   });
@@ -242,10 +227,9 @@ describe('AuthController', () => {
         clearCookie: jest.fn().mockReturnThis()
       });
 
-      await controller.signOut(req, res);
+      const result = await controller.signOut(req, res);
 
-      expect(res.status).toBeCalledWith(httpStatus.OK);
-      expect(res.json).toBeCalledWith({
+      expect(result).toMatchObject({
         message: 'Sign out successfully'
       });
       expect(res.clearCookie).toBeCalledWith(config.JWT_COOKIE_NAME);
@@ -273,10 +257,9 @@ describe('AuthController', () => {
         cookie: jest.fn().mockReturnThis()
       });
 
-      await controller.refreshToken(req, res);
+      const result = await controller.refreshToken(req, res);
 
-      expect(res.status).toBeCalledWith(httpStatus.OK);
-      expect(res.json).toBeCalledWith({
+      expect(result).toMatchObject({
         accessToken: expect.any(String),
         message: 'Tokens refreshed successfully'
       });
@@ -292,7 +275,7 @@ describe('AuthController', () => {
       clearMockRes();
     });
 
-    describe('should return api error', () => {
+    describe('should return http error', () => {
       const req = getMockReq({
         body: signInInput
       });
@@ -306,19 +289,16 @@ describe('AuthController', () => {
       });
 
       it('should return 401 if refresh token is invalid', async () => {
-        const apiError = new ApiError(httpStatus.UNAUTHORIZED, 'invalid token');
-        service.refreshToken = jest.fn().mockResolvedValue(apiError);
+        const httpError = new HttpError(httpStatus.UNAUTHORIZED, 'invalid token');
+        service.refreshToken = jest.fn().mockResolvedValue(httpError);
 
-        await controller.refreshToken(req, res);
+        const result = await controller.refreshToken(req, res);
 
-        expect(res.status).toBeCalledWith(httpStatus.UNAUTHORIZED);
-        expect(res.json).toBeCalledWith(
-          expect.objectContaining({
-            statusCode: httpStatus.UNAUTHORIZED,
-            message: 'invalid token'
-          })
-        );
-        clearMockRes();
+        expect(result).toBeInstanceOf(HttpError);
+        expect(result).toMatchObject({
+          httpCode: httpStatus.UNAUTHORIZED,
+          message: 'invalid token'
+        });
       });
     });
   });

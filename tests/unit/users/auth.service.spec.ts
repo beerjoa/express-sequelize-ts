@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
+import { HttpError } from 'routing-controllers';
 
 import AuthService from '@/users/auth.service';
 import { CreateUserDto, SignInUserDto } from '@/users/dtos/user.dto';
-import ApiError from '@/utils/api-error.util';
 
 describe('AuthService', () => {
   let authService = new AuthService();
@@ -29,7 +29,7 @@ describe('AuthService', () => {
 
     describe('when creating a new user with token', () => {
       it('should return created user with token', async () => {
-        const createUser = { ...createUserData, id: 0 };
+        const createUser = { ...createUserData, id: expect.any(Number) };
 
         authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(undefined));
         authService.repository.create = jest.fn().mockReturnValue(createUser);
@@ -49,7 +49,7 @@ describe('AuthService', () => {
         authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(createUserData));
 
         await expect(authService.signUp(createUserData)).resolves.toMatchObject(
-          new ApiError(httpStatus.BAD_REQUEST, 'User already exists')
+          new HttpError(httpStatus.BAD_REQUEST, 'User already exists')
         );
       });
     });
@@ -64,7 +64,7 @@ describe('AuthService', () => {
         authService.repository.findOne = jest.fn().mockReturnValue(Promise.resolve(null));
 
         await expect(authService.signIn(signInUserData)).resolves.toMatchObject(
-          new ApiError(httpStatus.NOT_FOUND, 'User Not Found')
+          new HttpError(httpStatus.BAD_REQUEST, 'Incorrect email or password.')
         );
       });
     });
@@ -75,7 +75,7 @@ describe('AuthService', () => {
         authService.comparePassword = jest.fn().mockReturnValue(false);
 
         await expect(authService.signIn(signInUserData)).resolves.toMatchObject(
-          new ApiError(httpStatus.BAD_REQUEST, 'Incorrect password')
+          new HttpError(httpStatus.BAD_REQUEST, 'Incorrect email or password.')
         );
       });
     });

@@ -1,76 +1,87 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import passport from 'passport';
+import { Action, HttpError } from 'routing-controllers';
 import { Model } from 'sequelize-typescript';
+import { Service } from 'typedi';
 
+import { IAuthMiddleware, TAuthType } from '@/interfaces/middleware.interface';
 import User from '@/users/user.entity';
-import ApiError from '@/utils/api-error.util';
-import { http } from '@/utils/handler.util';
-import { Action } from 'routing-controllers';
 
 type TAction = Action & {
   request: Request;
   response: Response;
   next: NextFunction;
 };
-type TAuthType = 'local' | 'jwt' | 'jwt-refresh';
-type TVerifyCallback = {
-  [K in TAuthType]: (req: Request, resolve: any, reject: any) => (err: any, user: Model<User>, info: object) => void;
-};
 
-const verifyCallback: TVerifyCallback = {
-  local:
-    (req: Request, resolve: any, reject: any) =>
-    (err: any, user: Model<User>, info: any): void => {
+export const authorizationChecker = (action: TAction) => {
+  const { request: req, response: res, next } = action;
+  return new Promise((resolve) => {
+    passport.authenticate('jwt', { session: false }, (err: any, user: Model<User>, info: any): void => {
       if (err || !user) {
-        const error = new ApiError(httpStatus.UNAUTHORIZED, info?.message || err.message);
-        reject(error);
+        return resolve(false);
       }
 
       req.user = user;
-      resolve();
-    },
-  jwt:
-    (req: Request, resolve: any, reject: any) =>
-    (err: any, user: Model<User>, info: any): void => {
-      if (err || !user) {
-        const error = new ApiError(httpStatus.UNAUTHORIZED, info?.message || err.message);
-        reject(error);
-      }
-
-      req.user = user;
-      resolve();
-    },
-  'jwt-refresh':
-    (req: Request, resolve: any, reject: any) =>
-    (err: any, user: Model<User>, info: any): void => {
-      if (err || !user) {
-        const error = new ApiError(httpStatus.UNAUTHORIZED, info?.message || err.message);
-        reject(error);
-      }
-
-      req.user = user;
-      resolve();
-    }
-};
-
-const authMiddlewareFn = (req: Request, res: Response, next: NextFunction, authType: TAuthType) => {
-  return new Promise((resolve, reject) => {
-    passport.authenticate(authType, { session: false }, verifyCallback[authType](req, resolve, reject))(req, res, next);
+      return resolve(true);
+    })(req, res, next);
   });
 };
 
-const auth =
-  (authType: TAuthType): RequestHandler =>
-  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    await authMiddlewareFn(req, res, next, authType)
-      .then(() => {
-        next();
-      })
-      .catch((err) => {
-        return http.sendErrorResponse(res, err.statusCode, err);
-      });
-  };
-export const authorizationChecker = (action: TAction) => auth('jwt')(action.request, action.response, action.next);
+/**
+ * @class LocalAuthMiddleware
+ * @description Middleware to verify local credentials
+ * @implements IAuthMiddleware
+ */
+@Service()
+export class LocalAuthMiddleware implements IAuthMiddleware<Model<User>> {
+  public readonly authType: TAuthType;
+  constructor() {
+    this.authType = 'local';
+  }
 
-export default auth;
+  public readonly verifyCallback =
+    (req: Request, res: Response, next: NextFunction) => (err: any, user: Model<User>, info: any) => {
+      if (err || !user) {
+        const error = new HttpError(httpStatus.UNAUTHORIZED, info?.message || err.message);
+        next(error);
+      }
+      req.user = user;
+      next();
+    };
+
+  public readonly authenticate = (callback: any) => passport.authenticate(this.authType, { session: false }, callback);
+
+  public use(req: Request, res: Response, next: NextFunction): void {
+    this.authenticate(this.verifyCallback(req, res, next))(req, res, next);
+  }
+}
+
+/**
+ * @class JWTAuthMiddleware
+ * @description Middleware to verify JWT-refresh token
+ * @implements IAuthMiddleware
+ */
+@Service()
+export class JWTRefreshAuthMiddleware implements IAuthMiddleware<Model<User>> {
+  public readonly authType: TAuthType;
+  constructor() {
+    this.authType = 'jwt-refresh';
+  }
+
+  public readonly verifyCallback =
+    (req: Request, res: Response, next: NextFunction) => (err: any, user: Model<User>, info: any) => {
+      if (err || !user) {
+        const error = new HttpError(httpStatus.UNAUTHORIZED, info?.message || err.message);
+        next(error);
+      }
+      req.user = user;
+      next();
+    };
+
+  public readonly authenticate = (callback: any) => passport.authenticate(this.authType, { session: false }, callback);
+
+  public use(req: Request, res: Response, next: NextFunction): void {
+    this.authenticate(this.verifyCallback(req, res, next))(req, res, next);
+  }
+}

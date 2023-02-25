@@ -11,6 +11,7 @@ export default async (): Promise<Config.InitialOptions> => {
     moduleNameMapper: {
       '^@/(.*)$': '<rootDir>/src/$1'
     },
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     detectOpenHandles: true
   };
 };
