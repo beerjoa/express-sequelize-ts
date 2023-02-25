@@ -22,7 +22,7 @@ import databaseHandler from '@/config/database/handler';
 import { jwtCookieStrategy, jwtStrategy } from '@/config/passport/jwt';
 import localStrategy from '@/config/passport/local';
 import { authorizationChecker } from '@/middlewares/auth.middleware';
-import { loggerHandler } from '@/middlewares/handler.middleware';
+import { HttpErrorHandler, LoggingHandler } from '@/middlewares/handler.middleware';
 import logger from '@/utils/logger.util';
 
 type ServerInstanceType = http.Server | https.Server | null;
@@ -87,9 +87,11 @@ class App implements IApp {
     const routingControllerOptions: Partial<TRoutingControllersOptions> = {
       routePrefix: '/api',
       controllers: [path.join(__dirname, '/*.controller.ts'), path.join(__dirname, '/**/*.controller.ts')],
-      middlewares: [path.join(__dirname, '/middleware/*.ts')],
+      middlewares: [HttpErrorHandler, LoggingHandler],
+      interceptors: [path.join(__dirname, '/interceptors/*.interceptor.ts')],
       defaultErrorHandler: false,
       validation: true,
+      classTransformer: true,
       authorizationChecker
     };
 
@@ -131,11 +133,6 @@ class App implements IApp {
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
-
-    if (this._env !== 'test') {
-      this.app.use(loggerHandler.success);
-      this.app.use(loggerHandler.error);
-    }
     this.app.use(helmet());
     this.app.use(cors());
     this.app.use(compression());
