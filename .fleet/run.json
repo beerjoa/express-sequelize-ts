@@ -14,9 +14,9 @@
     },
     {
       "type": "command",
-      "name": "e2e test",
+      "name": "integration test",
       "program": "yarn",
-      "args": ["test:e2e"]
+      "args": ["test:integration"]
     }
   ]
 }

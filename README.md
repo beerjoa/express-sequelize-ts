@@ -1,13 +1,19 @@
 # express-sequelize-ts
 
-[![node.js Actions Status](https://github.com/beerjoa/express-sequelize-ts/workflows/nodejs-master/badge.svg)](https://github.com/beerjoa/express-sequelize-ts/actions)
+![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/beerjoa/express-sequelize-ts/node.js.yml?branch=main)
+![GitHub last commit](https://img.shields.io/github/last-commit/beerjoa/express-sequelize-ts)
+![GitHub issues](https://img.shields.io/github/issues/beerjoa/express-sequelize-ts)
+![GitHub license](https://img.shields.io/github/license/beerjoa/express-sequelize-ts)
+
+![GitHub package.json version](https://img.shields.io/github/package-json/v/beerjoa/express-sequelize-ts)
+![GitHub top language](https://img.shields.io/github/languages/top/beerjoa/express-sequelize-ts)
 
 ![thumb](images/thumb.jpg)
 
 ## Description
 
 A TypeScript-based boilerplate for creating a web application using the Express framework and the Sequelize ORM. \
-Made with [Express](https://expressjs.com/en/4x/api.html), [TypeScript](https://www.typescriptlang.org/docs), [ESLint](https://eslint.org/docs/latest), [Prettier](https://prettier.io/docs/en), [Jest](https://jestjs.io/docs/getting-started), and [Docker](https://docs.docker.com).
+Made with [Express](https://expressjs.com/en/4x/api.html), [TypeScript](https://www.typescriptlang.org/docs), [TypeStack](https://github.com/typestack), [ESLint](https://eslint.org/docs/latest), [Prettier](https://prettier.io/docs/en), [Jest](https://jestjs.io/docs/getting-started), and [Docker](https://docs.docker.com).
 
 ## Features
 
@@ -16,10 +22,15 @@ Made with [Express](https://expressjs.com/en/4x/api.html), [TypeScript](https://
 - 🚚 [Express](https://expressjs.com/en/4x/api.html) for handling HTTP requests and responses
 - 💾 [Sequelize](https://github.com/sequelize/sequelize-typescript) ORM for interacting with a database
 - 🟦 [TypeScript](https://www.typescriptlang.org/docs) for strong typing and better code organization
+- 📚 [TypeStack](https://github.com/typestack) for building Decorator-based Express applications
+  - [routing-controllers](https://github.com/typestack/routing-controllers) building routing controllers
+  - [class-validator](https://github.com/typestack/class-validator) for data validation
+  - [class-transformer](https://github.com/typestack/class-transformer) for data transformation
+  - [typedi](https://github.com/typestack/typedi) for dependency injection
 - 🛠 [Jest](https://jestjs.io/docs/getting-started) for unit and integration testing
 - 🚧 [ESLint](https://eslint.org/docs/latest) for linting
 - 🎨 [Prettier](https://prettier.io/docs/en) for code formatting
-- 🐬 [Docker](https://docs.docker.com) for containerization
+- 🐳 [Docker](https://docs.docker.com) for containerization
 
 #### Back-end app features
 
@@ -96,8 +107,12 @@ $ yarn docker:prod
 
 ## What's next?
 
+- [x] ~~Add unit test~~
+- [x] ~~Add integration test~~
+- [x] ~~Add docker-compose~~
 - [x] ~~Add swagger~~
-- [ ] Handle scheduled tasks using bull
+- [ ] Write more specific documentation
+- [ ] Develop a new feature
 
 ## License
 

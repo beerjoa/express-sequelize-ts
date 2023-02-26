@@ -1,8 +1,8 @@
-# Test, Dev. and Prod. Dockerfile for the exprees-sequelize-ts app.
+# Test, Development and Production Dockerfile for the exprees-sequelize-ts app.
 
-# Test, Dev.
+# Test, Development
 FROM node:18.12.0-slim as base
-LABEL maintainer="yoooong2@gmail.com"
+LABEL maintainer="dev.beerjoa@gmail.com"
 LABEL build_date="2023-01-13"
 
 RUN mkdir -p /data/app && \
@@ -18,7 +18,7 @@ RUN yarn install --pure-lockfile
 
 COPY --chown=node:node . .
 
-# Prod.
+# Production
 FROM base as production
 
 RUN yarn build
