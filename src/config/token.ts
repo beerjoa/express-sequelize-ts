@@ -8,6 +8,9 @@ export type TResultToken = {
   refreshToken: string;
 };
 
+/**
+ * Token generator
+ */
 class TokenGenerator {
   constructor(
     private readonly accessTokenSecretKey: string = config.JWT_ACCESS_TOKEN_SECRET,
