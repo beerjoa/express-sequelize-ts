@@ -17,6 +17,8 @@ import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUiExpress from 'swagger-ui-express';
 import { Container } from 'typedi';
 
+const { defaultMetadataStorage } = require('class-transformer/cjs/storage');
+
 import config from '@/config';
 import databaseHandler from '@/config/database/handler';
 import { jwtCookieStrategy, jwtStrategy } from '@/config/passport/jwt';
@@ -108,6 +110,7 @@ class App implements IApp {
   private async _InitSwagger(routingControllerOptions: Partial<RoutingControllersOptions>): Promise<void> {
     const storage = getMetadataArgsStorage();
     const schemas = validationMetadatasToSchemas({
+      classTransformerMetadataStorage: defaultMetadataStorage,
       refPointerPrefix: '#/components/schemas/'
     });
 
@@ -115,14 +118,25 @@ class App implements IApp {
       info: {
         title: 'API Documentation',
         description: 'API Documentation',
-        version: '1.0.0'
+        version: config.APP_VERSION
       },
       servers: [
         {
           url: this._serverUrl
         }
       ],
-      components: { schemas } as ComponentsObject
+      components: {
+        schemas,
+        securitySchemes: {
+          jwtAuth: {
+            type: 'apiKey',
+            scheme: 'bearer',
+            name: 'Authorization',
+            in: 'header',
+            bearerFormat: 'JWT'
+          }
+        }
+      } as ComponentsObject
     };
     const spec = routingControllersToSpec(storage, routingControllerOptions, additionalProperties);
 

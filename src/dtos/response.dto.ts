@@ -3,7 +3,7 @@ import { IsNumber, IsObject, IsString } from 'class-validator';
 import { JSONSchema } from 'class-validator-jsonschema';
 
 @JSONSchema({
-  description: 'Error Response dto',
+  description: 'Base Error Response dto',
   example: {
     httpCode: 400,
     name: 'BadRequestError',

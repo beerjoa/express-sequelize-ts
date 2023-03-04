@@ -2,6 +2,16 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsDate, IsEmail, IsNumber, IsString, IsStrongPassword } from 'class-validator';
 import { JSONSchema } from 'class-validator-jsonschema';
 
+@JSONSchema({
+  description: 'User dto',
+  example: {
+    id: 1,
+    name: 'John Doe',
+    email: 'johndoe@email.com',
+    createdAt: '2020-01-01T00:00:00.000Z',
+    updatedAt: '2020-01-01T00:00:00.000Z'
+  }
+})
 @Exclude()
 export default class UserDto {
   @Expose()

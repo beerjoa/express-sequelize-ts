@@ -5,6 +5,11 @@ import { sequelize } from '@/config/database';
 import { IService } from '@/interfaces/service.interface';
 import User from '@/users/user.entity';
 
+/**
+ * Index Service
+ * @class
+ * @implements {IService}
+ */
 @Service()
 class IndexService implements IService {
   // prettier-ignore

@@ -25,6 +25,10 @@ import { UserResponseDto } from '@/users/dtos/response.dto';
 import UserDto, { CreateUserDto, SignInUserDto } from '@/users/dtos/user.dto';
 
 @JsonController('/auth')
+@OpenAPI({
+  summary: 'Auth',
+  description: 'Auth Controller'
+})
 @Service()
 class AuthController implements IController {
   // prettier-ignore
@@ -35,7 +39,8 @@ class AuthController implements IController {
   @Get('/who-am-i')
   @OpenAPI({
     summary: 'Who am I',
-    description: 'Get current user'
+    description: 'Get current user',
+    security: [{ jwtAuth: [] }]
   })
   @Authorized()
   @HttpCode(httpStatus.OK)
@@ -148,7 +153,8 @@ class AuthController implements IController {
   @Get('/sign-out')
   @OpenAPI({
     summary: 'Sign out',
-    description: 'Sign out with email and password'
+    description: 'Sign out with email and password',
+    security: [{ jwtAuth: [] }]
   })
   @Authorized()
   @HttpCode(httpStatus.OK)

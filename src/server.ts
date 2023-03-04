@@ -1,11 +1,13 @@
 import App from '@/app';
 import logger from '@/utils/logger.util';
 
+/**
+ * Main entry point of the application
+ */
 const main = async (): Promise<void> => {
   const app = await App.build();
 
   app.start();
-
   process.on('SIGINT', () => {
     logger.info(`Process ${process.pid} received SIGINT: Exiting with code 0`);
     app.stop();
