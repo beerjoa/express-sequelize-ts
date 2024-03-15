@@ -1,8 +1,15 @@
 {
   "name": "express-sequelize-ts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "src/server.ts",
   "author": "Jaeyong Shim <dev.beerjoa@gmail.com>",
+  "description": "Express Sequelize TypeScript Boilerplate",
+  "keywords": [
+    "express",
+    "sequelize",
+    "typescript",
+    "boilerplate"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

@@ -1,48 +1,61 @@
-# express-sequelize-ts
+<p align="center">
+  <a href="https://blog.beerjoa.dev/projects/express-sequelize-ts/" target="blank" rel="noreferrer">
+    <img src="https://em-content.zobj.net/source/twitter/376/toolbox_1f9f0.png" width="128" alt="express-sequelize-ts" />
+  </a>
+</p>
+<h1 align="center">
+  ESTS
+</h1>
+<div align="center">
+  <p>
+    <img src="https://img.shields.io/github/package-json/v/beerjoa/express-sequelize-ts" alt="Version" />
+    <img src="https://img.shields.io/github/actions/workflow/status/beerjoa/express-sequelize-ts/node.js.yml?branch=main" alt="GitHub Actions Status" />
+    <!-- <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fbeerjoa%2Fexpress-sequelize-ts&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" alt="hits" /> -->
+    <img src="https://img.shields.io/github/license/beerjoa/express-sequelize-ts" alt="License" />
+    <img src="https://img.shields.io/github/issues/beerjoa/express-sequelize-ts" alt="Github issues" />
+    <img src="https://img.shields.io/github/last-commit/beerjoa/express-sequelize-ts" alt="GitHub last commit" />
+    <img src="https://img.shields.io/github/languages/top/beerjoa/express-sequelize-ts" alt="GitHub top language" />
+  </p>
+  <p>
+    <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white" alt="Node.js" />
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white" alt="Express" />
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white" alt="Docker" />
+    <img src="https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white" alt="SQLite" />
+    <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=flat&logo=sequelize&logoColor=white" alt="Sequelize" />
+    <img src="https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white" alt="Jest" />
+    <img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat&logo=eslint&logoColor=white" alt="ESLint" />
+    <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=prettier&logoColor=white" alt="Prettier" />
+  </p>
+</div>
 
-![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/beerjoa/express-sequelize-ts/node.js.yml?branch=main)
-![GitHub last commit](https://img.shields.io/github/last-commit/beerjoa/express-sequelize-ts)
-![GitHub issues](https://img.shields.io/github/issues/beerjoa/express-sequelize-ts)
-![GitHub license](https://img.shields.io/github/license/beerjoa/express-sequelize-ts)
+## Introduction
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/beerjoa/express-sequelize-ts)
-![GitHub top language](https://img.shields.io/github/languages/top/beerjoa/express-sequelize-ts)
+`ESTS (express-sequelize-ts)` is a TypeScript-based boilerplate that enables the creation of web applications using the Express framework and Sequelize ORM.
 
-![thumb](images/thumb.jpg)
+## Technology Stacks
 
-## Description
+- 🟦 [TypeScript](https://www.typescriptlang.org/docs) - A strongly typed programming language that builds on JavaScript.
+- 🌐 [Node.js](https://nodejs.org/en/docs) - An asynchronous event-driven JavaScript runtime.
+- 🚚 [Express](https://expressjs.com/en/4x/api.html) - A minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+- 💾 [Sequelize](https://github.com/sequelize/sequelize-typescript) - A promise-based Node.js ORM tool for various Relational database.
+- 📚 [TypeStack](https://github.com/typestack) - A decorator-based frameworks and libraries for Node and browser.
+- 🛠 [Jest](https://jest-archive-august-2023.netlify.app/docs/29.3/getting-started/) - A delightful JavaScript Testing Framework focusing on simplicity.
+- 🚧 [ESLint](https://eslint.org/docs/latest) - An open-source project that helps to find and fix problems with the project's JavaScript code.
+- 🎨 [Prettier](https://prettier.io/docs/en) -  An opinionated code formatter supporting the project's code.
+- 🐳 [Docker](https://docs.docker.com) - A platform designed to help developers build, share, and run container applications.
 
-A TypeScript-based boilerplate for creating a web application using the Express framework and the Sequelize ORM. \
-Made with [Express](https://expressjs.com/en/4x/api.html), [TypeScript](https://www.typescriptlang.org/docs), [TypeStack](https://github.com/typestack), [ESLint](https://eslint.org/docs/latest), [Prettier](https://prettier.io/docs/en), [Jest](https://jestjs.io/docs/getting-started), and [Docker](https://docs.docker.com).
+## Development Features
 
-## Features
-
-#### Developer experience
-
-- 🚚 [Express](https://expressjs.com/en/4x/api.html) for handling HTTP requests and responses
-- 💾 [Sequelize](https://github.com/sequelize/sequelize-typescript) ORM for interacting with a database
-- 🟦 [TypeScript](https://www.typescriptlang.org/docs) for strong typing and better code organization
-- 📚 [TypeStack](https://github.com/typestack) for building Decorator-based Express applications
-  - [routing-controllers](https://github.com/typestack/routing-controllers) building routing controllers
-  - [class-validator](https://github.com/typestack/class-validator) for data validation
-  - [class-transformer](https://github.com/typestack/class-transformer) for data transformation
-  - [typedi](https://github.com/typestack/typedi) for dependency injection
-- 🛠 [Jest](https://jestjs.io/docs/getting-started) for unit and integration testing
-- 🚧 [ESLint](https://eslint.org/docs/latest) for linting
-- 🎨 [Prettier](https://prettier.io/docs/en) for code formatting
-- 🐳 [Docker](https://docs.docker.com) for containerization
-
-#### Back-end app features
-
-- 🚫 JWT authentication for secure access to the API
-- 🎢 Layered architecture. (Controller, Service(Repository), Model)
-- ♻️ Data Transport Object (DTO) for data validation
-- 📦 Dependency injection for better code organization
-- 📝 Swagger for API documentation
+- 🚫 JWT authentication, to ensure secure access to the API.
+- 🎢 A Layered architecture (Controller, Service, Repository, Model).
+- 📦 Dependency injection for better code organization.
+- 📝 Swagger for API documentation and testing.
+- ♻️ Data Transport Object (DTO) to validate request and response data.
 
 ## Requirements
 
-- Node.js
+- Node 18.12.x
 - Yarn
 - SQLite (or any other database supported by Sequelize)
 - Docker (optional)
@@ -111,9 +124,9 @@ $ yarn docker:prod
 - [x] ~~Add integration test~~
 - [x] ~~Add docker-compose~~
 - [x] ~~Add swagger~~
-- [ ] Write more specific documentation
+- [x] ~~Write more specific documentation~~
 - [ ] Develop a new feature
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/beerjoa/express-sequelize-ts/blob/main/LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
